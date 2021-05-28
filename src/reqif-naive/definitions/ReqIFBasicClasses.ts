@@ -24,7 +24,6 @@ export class Identifiable {
             this.identifier = uuidv4() as string;
         }
     }
-
 }
 
 export interface AlternativeID {
@@ -53,12 +52,13 @@ export interface AccessControlledElement extends Identifiable {
 //-------------------------------------------------------
 //SpecElementWithAttributes
 
-export interface SpecElementWithAttributes extends Identifiable {
-    values: AttributeValue[]
+export class SpecElementWithAttributes extends Identifiable {
+    values?: AttributeValue[]
 
-    // constructor() {
-    //     super()
-
-    //     this.values = [];
-    // }
+    constructor(props?:SpecElementWithAttributes) {
+        super(props);
+        if(props) {
+            this.values = props['values'];
+        }
+    }
 }

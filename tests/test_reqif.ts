@@ -20,6 +20,8 @@ import { DatatypeDefinition, DatatypeDefinitionString, DatatypeDefinitionInteger
 import { SpecificationType, SpecObjectType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
 import { ToArray } from "../src/utils";
 import { Identifiable } from "../src/reqif-naive/definitions/ReqIFBasicClasses";
+import { SpecObject } from "../src/reqif-naive/content/ReqIFSpecObject";
+import { Specification } from "../src/reqif-naive/content/ReqIFSpecification";
 
 // import { ReqIF } from "./reqif-naive/ReqIF"
 
@@ -94,6 +96,40 @@ let SpecTypeMap: { [key: string]: any } = {
     },
 }
 
+//----------------
+//Spec objects
+
+let SpecObjectMap: { [key: string]: any } = {
+    "SPEC-OBJECT": (v: any): SpecObject => {
+        return new SpecObject ({
+            desc: v["@_DESC"],
+            identifier: v["@_IDENTIFIER"],
+            lastChange: v["@_LAST-CHANGED"],
+            longName: v["@_LONG-NAME"],
+            values: v["VALUES"],
+            type: v["TYPE"]
+        }); 
+    }, 
+
+}
+
+//----------------
+//Specification
+let SpecificationMap = {
+    "SPECIFICATION": (v: any): Specification => {
+        return new Specification({
+            desc: v["@_DESC"],
+            identifier: v["@_IDENTIFIER"],
+            lastChange: v["@_LAST-CHANGED"],
+            longName: v["@_LONG-NAME"],
+            values: v["VALUES"],
+            type: v["TYPE"],
+            children: v["CHILDREN"]
+        });
+    },
+    
+};
+
 //---------------------
 function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[] {
     let res =  Object.keys(source).map((key) => {
@@ -108,6 +144,11 @@ function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[]
 
 let datatypes:DatatypeDefinition[] = extractData<SpecType>(DataTypeMap, source_datatypes);
 let specTypes: SpecType[] = extractData<SpecType>(SpecTypeMap, source_specTypes);
+let specObjects: SpecType[] = extractData<SpecType>(SpecObjectMap, source_specObjects);
+let specifications: Specification[] = extractData<Specification>(SpecificationMap, source_specifications);
+
 
 console.log("DataTypes: ", datatypes);
 console.log("SpecTypes: ", specTypes);
+console.log("SpecObjects: ", specObjects);
+console.log("Specifications: ", specifications);

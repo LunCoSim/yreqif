@@ -4,36 +4,40 @@ import { RelationGroup } from "./ReqIFRelationGroup";
 import { SpecObject } from "./ReqIFSpecObject";
 import { SpecificationType } from "./ReqIFSpecTypes";
 
-export interface  Specification extends SpecElementWithAttributes {
-    type: SpecificationType;
-    root: SpecHierarchy;
-    sourceSpecification: RelationGroup;
-    targetSpecificaiton: RelationGroup;
-
-    // constructor() {
-    //     super();
-
-    //     this.type = new SpecificationType();
-    //     this.root = new SpecHierarchy();
-    //     this.sourceSpecification = new RelationGroup();
-    //     this.targetSpecificaiton = new RelationGroup();
-    // }
+export class Specification extends SpecElementWithAttributes {
+    type?: SpecificationType;
+    // root?: SpecHierarchy;
+    // sourceSpecification?: RelationGroup;
+    // targetSpecificaiton?: RelationGroup;
+    children?: SpecHierarchy[]; //ordered
+    // coreContent?:todo
+    constructor(props?:Specification) {
+        super(props);
+        if(props) {
+            this.type = props['type'];
+            // this.root = props['root']; 
+            // this.sourceSpecification = props['sourceSpecification'];
+            // this.targetSpecificaiton = props['targetSpecificaiton'];
+            this.children = props['children'];
+        }
+    }
 }
 
-export interface  SpecHierarchy extends SpecElementWithAttributes {
-    isTableInternal: boolean;
-    object: SpecObject;
-    parent: SpecHierarchy;
-    children: Specification[]; //ordered
-    specObjects: SpecObject[];
+export class SpecHierarchy extends SpecElementWithAttributes {
+    isTableInternal?: boolean;
+    object?: SpecObject;
+    parent?: SpecHierarchy;
+    children?: Specification[]; //ordered
+    specObjects?: SpecObject[];
 
-    // constructor() {
-    //     super()
-
-    //     this.isTableInternal = false;
-    //     this.object = new SpecObject();
-    //     this.parent = new SpecHierarchy();
-    //     this.children = []; //ordered
-    //     this.specObjects = [];
-    // }
+    constructor(props?:SpecHierarchy) {
+        super(props);
+        if(props) {
+            this.isTableInternal = props['isTableInternal'];
+            this.object = props['object']; 
+            this.parent = props['parent'];
+            this.children = props['children'];
+            this.specObjects = props['specObjects'];
+        }
+    }
 }

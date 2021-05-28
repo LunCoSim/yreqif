@@ -40,6 +40,6 @@ specifications = extractData<Specification>(data.source_specifications);
 
 console.log("DataTypes: ", datatypes);
 console.log("SpecTypes: ", specTypes);
-console.log("SpecObjects: ", specObjects);
+// console.log("SpecObjects: ", specObjects);
 console.log("Specifications: ", specifications);
 

@@ -1,12 +1,14 @@
 import * as _ from "lodash";
 import { parse as fast_xml_parse} from "fast-xml-parser";
 import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { AttributeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
 import { SpecificationType, SpecObjectType, SpecRelationType } from "../reqif-naive/content/ReqIFSpecTypes";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
-import { Specification } from "../reqif-naive/content/ReqIFSpecification";
+import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
 import { ToArray } from "../utils";
 
+import { AttributeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition"; 
+import { AttributeValueString } from "../reqif-naive/definitions/ReqIFDefinition";
 
 //-------------------------------------
 
@@ -64,30 +66,36 @@ ExtractingFunctionsMap[DatatypeDefinitionEnumeration.name] = (v: any): unknown =
 //Spec Types
 ExtractingFunctionsMap[SpecObjectType.name] = (v: any): unknown => {
     return {
-        specAttributes: v["SPEC-ATTRIBUTES"]
+        specAttributes: extractData(v["SPEC-ATTRIBUTES"])
     }
 }
 
 ExtractingFunctionsMap[SpecificationType.name] = (v: any): unknown => {
     return {
-        specAttributes: v["SPEC-ATTRIBUTES"]
+        specAttributes: extractData(v["SPEC-ATTRIBUTES"])
     }
 }
 
 //Spec objects
 ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
     return {
-        values: v["VALUES"],
-        type: v["TYPE"]
+        values: extractData(v["VALUES"]),
+        type: extractData(v["TYPE"])
     }
 }
 
 //Specification
 ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
     return {
-        values: v["VALUES"],
-        type: v["TYPE"],
-        children: v["CHILDREN"]
+        values: extractData(v["VALUES"]),
+        type: extractData(v["TYPE"]),
+        children: extractData(v["CHILDREN"])
+    }
+}
+
+ExtractingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
+    return {
+        type: extractData(v["TYPE"])
     }
 }
 
@@ -106,9 +114,12 @@ const XMLMap: { [key: string]: any } = {
     
 //Spec objects
     "SPEC-OBJECT": SpecObject, 
-
-//Specification
+    "SPEC-HIERARCHY": SpecHierarchy,
     "SPECIFICATION": Specification,
+
+//-----------
+    "ATTRIBUTE-DEFINITION-STRING": AttributeDefinitionString,
+    "ATTRIBUTE-VALUE-STRING": AttributeValueString,
 }
 
 //---------------------
@@ -126,24 +137,38 @@ export function extractProps(classProto: any, data: any): unknown {
     // console.log('extractProps: ', classProto.name);
 
     var res = extractProps(Object.getPrototypeOf(classProto), data);
-    
+
+    Object.keys(classProto).forEach(key => console.log("", key));
+
     var extractingFunction = ExtractingFunctionsMap[classProto.name];
 
     if(extractingFunction != undefined) {
-        res = Object.assign({}, res, extractingFunction(data));
+        var extracted = extractingFunction(data);
+        
+        res = Object.assign({}, res, extracted);
     }
+    
+    
 
+    // console.log(res);
+    // for(let key in Object.getOwnPropertyNames(res)) {
+    //     console.log(key);
+    // }
     return res;
+}
+
+function makeClassFromDate() {
+
 }
 
 export function extractData<Type>(source: any): Type[] {
     var res = Object.keys(source).map(function(className) {
         return ToArray(source[className]).map((data) => {
-            var clas = XMLMap[className];
-            if(clas) {
-                return new XMLMap[className](extractProps(XMLMap[className], data))
+            var mappedClass = XMLMap[className];
+            if(mappedClass) {
+                return new mappedClass(extractProps(XMLMap[className], data))
             } else {
-                console.error('Class: ', className, ' not found')
+                console.error('***************** Class not found: ', className)
             }
             
         });

@@ -36,17 +36,15 @@ export interface AlternativeID {
 //Access restriction
 
 //should be abstract interface
-export interface AccessControlledElement extends Identifiable {
-    isEditable: boolean;
+export class AccessControlledElement extends Identifiable {
+    isEditable?: boolean;
 
-    // constructor(identifier?: string, desc?: string, longName?: string, lastChange?: Date, isEditable?: boolean) {
-    //     super(identifier, desc, longName, lastChange);
-        
-    //     this.isEditable = true;
-    //     if(isEditable === false) {
-    //         this.isEditable = false;
-    //     } 
-    // }
+    constructor(props?:AccessControlledElement) {
+        super(props);
+        if(props) {
+            this.isEditable = props['isEditable'];
+        }
+    }
 }
 
 //-------------------------------------------------------

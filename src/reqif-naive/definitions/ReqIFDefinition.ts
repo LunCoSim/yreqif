@@ -14,23 +14,28 @@ export class  DatatypeDefinition extends Identifiable {
 }
 
 
-export interface  AttributeDefinition extends AccessControlledElement {
-    specType: SpecType;
+export class AttributeDefinition extends AccessControlledElement {
+    type?: SpecType;
 
-    // constructor(specType?: SpecType) {
-    //     super();
-    //     // this.spectype = specType;
-    // }
+    constructor(props?: AttributeDefinition) {
+        super(props);
+        if(props) {
+            this.type = props['type'];
+        }
+    }
 }
 
 
-export interface  AttributeValue {
-    specElAt: SpecElementWithAttributes[];
+export class AttributeValue {
+    specElAt?: SpecElementWithAttributes[];
     defaultValue?: AttributeDefinition;
 
-    // constructor() {
-    //     this.specElAt = [];
-    // }
+    constructor(props?: AttributeValue) {
+        if(props) {
+            this.specElAt = props['specElAt'];
+            this.defaultValue = props['defaultValue'];
+        }
+    }
 }
 
 /*
@@ -45,17 +50,20 @@ export class  DatatypeDefinitionSimple extends DatatypeDefinition {
     }
 }
 
-export interface  AttributeDefinitionSimple extends AttributeDefinition {
-    definition: AttributeValueSimple;
+export class  AttributeDefinitionSimple extends AttributeDefinition {
+    definition?: AttributeValueSimple;
     owningDefinition?: AttributeValueSimple;
 
-    // constructor(definition?:AttributeValueSimple) {
-    //     super();
-    //     this.definition = definition || new AttributeValueSimple();
-    // }
+    constructor(props?: AttributeDefinitionSimple) {
+        super(props);
+        if(props) {
+            this.definition = props['definition'];
+            this.owningDefinition = props['owningDefinition'];
+        }
+    }
 }
 
-export interface  AttributeValueSimple extends AttributeValue {
+export class  AttributeValueSimple extends AttributeValue {
     dummy?: string; //ToDO find a better way to baypass issue
 }
 
@@ -235,15 +243,30 @@ export class  DatatypeDefinitionString extends DatatypeDefinitionSimple {
     }
 }
 
-export interface  AttributeDefinitionString extends AttributeDefinitionSimple {
-    definition: AttributeValueString;
+export class  AttributeDefinitionString extends AttributeDefinitionSimple {
+    definition?: AttributeValueString;
     owningDefinition?: AttributeValueString;
 
+    constructor(props?: AttributeDefinitionString) {
+        super(props);
+        if(props) {
+            this.definition = props['definition'];
+            this.owningDefinition = props['owningDefinition'];
+        }
+    }
 }
 
-export interface  AttributeValueString extends AttributeValueSimple {
-    theValue: string;
+export class AttributeValueString extends AttributeValueSimple {
+    theValue?: string;
     defaultValue?: AttributeDefinitionString;
+
+    constructor(props?: AttributeValueString) {
+        super(props);
+        if(props) {
+            this.theValue = props['theValue'];
+            this.defaultValue = props['defaultValue'];
+        }
+    }
 }
 
 

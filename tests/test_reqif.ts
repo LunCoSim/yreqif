@@ -14,7 +14,7 @@ npm install -g fast-xml-parser
 
 import * as _ from "lodash";
 
-import { sample_xml as sample_xml } from "./sample_xml";
+import { sample_xml1 as sample_xml } from "./sample_xml";
 import { parse } from "fast-xml-parser";
 import { DatatypeDefinition, DatatypeDefinitionString, DatatypeDefinitionInteger, DatatypeDefinitionEnumeration } from "../src/reqif-naive/definitions/ReqIFDefinition";
 import { SpecificationType, SpecObjectType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
@@ -42,9 +42,10 @@ const source_specObjects = source_content['SPEC-OBJECTS'];
 const source_specifications = source_content['SPECIFICATIONS'];
 
 
-//DataTypes mapping
+//General map
+let GeneralMap: { [key: string]: any } = {
 
-let DataTypeMap: { [key: string]: any } = {
+    //DATA_TYPE
     "DATATYPE-DEFINITION-STRING": (v: any): DatatypeDefinition => {
         return new DatatypeDefinitionString ({
             desc: v["@_DESC"],
@@ -70,12 +71,8 @@ let DataTypeMap: { [key: string]: any } = {
             longName: v["@_LONG-NAME"],
         }); 
     },
-}
 
-//----------------
-//Spec Types
-
-let SpecTypeMap: { [key: string]: any } = {
+    //Spec Types
     "SPEC-OBJECT-TYPE": (v: any): SpecType => {
         return new SpecObjectType ({
             desc: v["@_DESC"],
@@ -94,12 +91,8 @@ let SpecTypeMap: { [key: string]: any } = {
             specAttributes: v["SPEC-ATTRIBUTES"]
         }); 
     },
-}
 
-//----------------
 //Spec objects
-
-let SpecObjectMap: { [key: string]: any } = {
     "SPEC-OBJECT": (v: any): SpecObject => {
         return new SpecObject ({
             desc: v["@_DESC"],
@@ -111,11 +104,7 @@ let SpecObjectMap: { [key: string]: any } = {
         }); 
     }, 
 
-}
-
-//----------------
 //Specification
-let SpecificationMap = {
     "SPECIFICATION": (v: any): Specification => {
         return new Specification({
             desc: v["@_DESC"],
@@ -127,8 +116,7 @@ let SpecificationMap = {
             children: v["CHILDREN"]
         });
     },
-    
-};
+}
 
 //---------------------
 function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[] {
@@ -142,11 +130,12 @@ function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[]
 //-------------Data types
 
 
-let datatypes:DatatypeDefinition[] = extractData<SpecType>(DataTypeMap, source_datatypes);
-let specTypes: SpecType[] = extractData<SpecType>(SpecTypeMap, source_specTypes);
-let specObjects: SpecType[] = extractData<SpecType>(SpecObjectMap, source_specObjects);
-let specifications: Specification[] = extractData<Specification>(SpecificationMap, source_specifications);
-
+let datatypes:DatatypeDefinition[] = extractData<SpecType>(GeneralMap, source_datatypes);
+let specTypes: SpecType[] = extractData<SpecType>(GeneralMap, source_specTypes);
+let specObjects: SpecType[] = extractData<SpecType>(GeneralMap, source_specObjects);
+let specifications: Specification[] = extractData<Specification>(GeneralMap, source_specifications);
+// let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
+// let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
 
 console.log("DataTypes: ", datatypes);
 console.log("SpecTypes: ", specTypes);

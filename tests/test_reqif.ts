@@ -58,13 +58,13 @@ ToArray(source_datatypes).map((dt) => {
     console.log(dt);
     if(dt['DATATYPE-DEFINITION-STRING'] != undefined) {
         ToArray(dt['DATATYPE-DEFINITION-STRING']).map((v) => {
-            datatypes.push({
+            datatypes.push(new DatatypeDefinitionString({
                 desc: v["@_DESC"],
                 identifier: v["@_IDENTIFIER"],
                 lastChange: v["@_LAST-CHANGED"],
                 longName: v["@_LONG-NAME"],
                 maxLength: v["@_MAX-LENGTH"]
-            } as DatatypeDefinitionString);
+            }));
         })
     } else if(dt['DATATYPE-DEFINITION-INTEGER'] != undefined) {
         //

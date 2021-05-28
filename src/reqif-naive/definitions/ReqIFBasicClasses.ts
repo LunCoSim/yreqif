@@ -15,7 +15,14 @@ export class Identifiable {
     alternativeID?: AlternativeID; //Actually
 
     constructor(props?:Identifiable) {
-        this.identifier = uuidv4() as string;
+        if(props) {
+            this.identifier = props['identifier'] || uuidv4() as string;
+            this.desc = props['desc'];
+            this.longName = props['longName'];
+            this.lastChange = props['lastChange'];
+        } else {
+            this.identifier = uuidv4() as string;
+        }
     }
 
 }

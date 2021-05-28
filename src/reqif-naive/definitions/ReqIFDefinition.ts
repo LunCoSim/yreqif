@@ -7,10 +7,10 @@ Basic abstract interface es
 ------------------------------------------------------------------------------
 */
 
-export interface  DatatypeDefinition extends Identifiable {
-    // constructor() {
-    //     // type = new AttributeDefinition();
-    // }
+export class  DatatypeDefinition extends Identifiable {
+    constructor(props?: DatatypeDefinition) {
+        super(props);
+    }
 }
 
 
@@ -39,7 +39,7 @@ Simple interface
 ------------------------------------------------------------------------------
 */
 
-export interface  DatatypeDefinitionSimple extends DatatypeDefinition {
+export class  DatatypeDefinitionSimple extends DatatypeDefinition {
     // constructor() {
     //     super();
         
@@ -211,8 +211,14 @@ export interface  AttributeValueReal extends AttributeValueSimple {
 //---------
 //String
 
-export interface  DatatypeDefinitionString extends DatatypeDefinitionSimple {
+export class  DatatypeDefinitionString extends DatatypeDefinitionSimple {
     maxLength?: number; //should be int
+    constructor(props?: DatatypeDefinitionString) {
+        super(props);
+        if(props) {
+            this.maxLength = props['maxLength'];
+        }
+    }
 }
 
 export interface  AttributeDefinitionString extends AttributeDefinitionSimple {

@@ -79,7 +79,7 @@ function extractDatatype(type: any): unknown {
     });
 }
 
-datatypes = _.flatten(ToArray(source_datatypes).map(extractDatatype)) as DatatypeDefinition[];
+datatypes = _.flattenDeep(ToArray(source_datatypes).map(extractDatatype)) as DatatypeDefinition[];
 
 console.log("DataTypes: ", datatypes);
 
@@ -115,6 +115,6 @@ function extractSpectype(type: any): unknown {
     });
 }
 
-specTypes = _.flatten(ToArray(source_specTypes).map(extractSpectype)) as SpecType[];
+specTypes = _.flattenDeep(ToArray(source_specTypes).map(extractSpectype)) as SpecType[];
 
 console.log("SpecTypes: ", specTypes);

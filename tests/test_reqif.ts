@@ -12,11 +12,14 @@ npm install -g fast-xml-parser
 2. npm link fast-xml-parser
 */
 
+import * as _ from "lodash";
+
 import { sample_xml } from "./sample_xml";
 import { parse } from "fast-xml-parser";
-import { DatatypeDefinitionString } from "../src/reqif-naive/definitions/ReqIFDefinition";
+import { DatatypeDefinition, DatatypeDefinitionString, DatatypeDefinitionInteger, DatatypeDefinitionEnumeration } from "../src/reqif-naive/definitions/ReqIFDefinition";
 import { SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
 import { ToArray } from "../src/utils";
+import { Identifiable } from "../src/reqif-naive/definitions/ReqIFBasicClasses";
 
 // import { ReqIF } from "./reqif-naive/ReqIF"
 
@@ -39,41 +42,47 @@ const source_specifications = source_content['SPECIFICATIONS'];
 
 
 
-// let DataTypeMap = {
-//     "DATATYPE-DEFINITION-STRING": function(v: unknown) {
-//         return {
-//             desc: v["@_DESC"],
-//             identifier: v["@_IDENTIFIER"],
-//             lastChange: v["@_LAST-CHANGED"],
-//             longName: v["@_LONG-NAME"],
-//             maxLength: v["@_MAX-LENGTH"]
-//         } as DatatypeDefinitionString
-//     }
-// }
+let DataTypeMap: { [key: string]: any } = {
+    "DATATYPE-DEFINITION-STRING": (v: any): DatatypeDefinition => {
+        return new DatatypeDefinitionString ({
+            desc: v["@_DESC"],
+            identifier: v["@_IDENTIFIER"],
+            lastChange: v["@_LAST-CHANGED"],
+            longName: v["@_LONG-NAME"],
+            maxLength: v["@_MAX-LENGTH"]
+        }); 
+    }, 
+    "DATATYPE-DEFINITION-INTEGER": (v: any): DatatypeDefinition => {
+        return new DatatypeDefinitionInteger ({
+            desc: v["@_DESC"],
+            identifier: v["@_IDENTIFIER"],
+            lastChange: v["@_LAST-CHANGED"],
+            longName: v["@_LONG-NAME"],
+        }); 
+    },
+    "DATATYPE-DEFINITION-ENUMERATION": (v: any): DatatypeDefinition => {
+        return new DatatypeDefinitionEnumeration ({
+            desc: v["@_DESC"],
+            identifier: v["@_IDENTIFIER"],
+            lastChange: v["@_LAST-CHANGED"],
+            longName: v["@_LONG-NAME"],
+        }); 
+    },
+}
 
 //-------------Data types
-const datatypes:DatatypeDefinitionString[] = [];
+let datatypes:DatatypeDefinition[] = [];
 
-ToArray(source_datatypes).map((dt) => {
-    console.log(dt);
-    if(dt['DATATYPE-DEFINITION-STRING'] != undefined) {
-        ToArray(dt['DATATYPE-DEFINITION-STRING']).map((v) => {
-            datatypes.push(new DatatypeDefinitionString({
-                desc: v["@_DESC"],
-                identifier: v["@_IDENTIFIER"],
-                lastChange: v["@_LAST-CHANGED"],
-                longName: v["@_LONG-NAME"],
-                maxLength: v["@_MAX-LENGTH"]
-            }));
-        })
-    } else if(dt['DATATYPE-DEFINITION-INTEGER'] != undefined) {
-        //
-    } else if(dt['DATATYPE-DEFINITION-ENUMERATION'] != undefined) {
-        //
+function extractDatatype(type: any) {
+    const definition = Object.keys(type)[0] as string;
+    if(definition != undefined) {
+        return ToArray(type[definition]).map(DataTypeMap[definition]);
     }
-});
+}
 
-console.log(datatypes);
+datatypes = _.flatten(ToArray(source_datatypes).map(extractDatatype)) as DatatypeDefinition[];
+
+console.log("DataTypes: ", datatypes);
 
 //----------------
 

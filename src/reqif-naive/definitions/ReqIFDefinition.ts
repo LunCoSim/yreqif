@@ -40,10 +40,9 @@ Simple interface
 */
 
 export class  DatatypeDefinitionSimple extends DatatypeDefinition {
-    // constructor() {
-    //     super();
-        
-    // }
+    constructor(props?: DatatypeDefinitionSimple) {
+        super(props);
+    }
 }
 
 export interface  AttributeDefinitionSimple extends AttributeDefinition {
@@ -69,13 +68,10 @@ Types definition
 //-----------
 //XHTML
 
-export interface  DatatypeDefinitionXHTML extends DatatypeDefinition {
-    type: AttributeDefinitionXHTML;
-
-    // constructor() {
-    //     super();
-        
-    // }
+export class  DatatypeDefinitionXHTML extends DatatypeDefinition {
+    constructor(props?: DatatypeDefinitionXHTML) {
+        super(props);
+    }
 }
 
 export interface  AttributeDefinitionXHTML extends AttributeDefinition {
@@ -103,13 +99,10 @@ export interface  XhtmlContent {
 //-----------
 //Enumeration
 
-export interface  DatatypeDefinitionEnumeration extends DatatypeDefinition {
-    type: AttributeDefinitionEnumeration;
-
-    // constructor() {
-    //     super();
-        
-    // }
+export class  DatatypeDefinitionEnumeration extends DatatypeDefinition {
+    constructor(props?: DatatypeDefinitionEnumeration) {
+        super(props);
+    }
 }
 
 export interface  AttributeDefinitionEnumeration extends AttributeDefinition {
@@ -139,8 +132,10 @@ export interface  EmbeddedValue {
 //----------
 //Boolean
 
-export interface  DatatypeDefinitionBoolean extends DatatypeDefinitionSimple {
-    type: AttributeDefinitionBoolean;
+export class  DatatypeDefinitionBoolean extends DatatypeDefinitionSimple {
+    constructor(props?: DatatypeDefinitionBoolean) {
+        super(props);
+    }
 }
 
 export interface  AttributeDefinitionBoolean extends AttributeDefinitionSimple {
@@ -156,8 +151,10 @@ export interface  AttributeValueBoolean extends AttributeValueSimple {
 //---------
 //Date
 
-export interface  DatatypeDefinitionDate extends DatatypeDefinitionSimple {
-    type: AttributeDefinitionDate;
+export class  DatatypeDefinitionDate extends DatatypeDefinitionSimple {
+    constructor(props?: DatatypeDefinitionDate) {
+        super(props);
+    }
 }
 
 export interface  AttributeDefinitionDate extends AttributeDefinitionSimple {
@@ -173,9 +170,17 @@ export interface  AttributeValueDate extends AttributeValueSimple {
 //---------
 //Integer
 
-export interface  DatatypeDefinitionInteger extends DatatypeDefinitionSimple {
-    max: number; //should be int
-    min: number; //should be int
+export class  DatatypeDefinitionInteger extends DatatypeDefinitionSimple {
+    max?: number; //should be int
+    min?: number; //should be int
+
+    constructor(props?: DatatypeDefinitionInteger) {
+        super(props);
+        if(props) {
+            this.max = props['max'];
+            this.min = props['min'];
+        }
+    }
 }
 
 export interface  AttributeDefinitionInteger extends AttributeDefinitionSimple {
@@ -192,10 +197,19 @@ export interface  AttributeValueInteger extends AttributeValueSimple {
 //---------
 //Real
 
-export interface  DatatypeDefinitionReal extends DatatypeDefinitionSimple {
-    accuracy: number;//should be int
-    max: number;
-    min: number;
+export class  DatatypeDefinitionReal extends DatatypeDefinitionSimple {
+    accuracy?: number;//should be int
+    max?: number;
+    min?: number;
+
+    constructor(props?: DatatypeDefinitionReal) {
+        super(props);
+        if(props) {
+            this.accuracy = props['accuracy'];
+            this.max = props['max'];
+            this.min = props['min'];
+        }
+    }
 }
 
 export interface  AttributeDefinitionReal extends AttributeDefinitionSimple {

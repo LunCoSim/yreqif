@@ -1,0 +1,16 @@
+{
+  "name": "yreqif",
+  "version": "0.1.0",
+  "description": "TypeScript library to work with ReqIF file format mady by Yarm team",
+  "main": "index.js",
+  "repository": "git@bitbucket.org:IonRod/yreqif.git",
+  "author": "IonRod(rod@yarm.me)",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "run": "node ./build/tests/test_reqif.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^3.19.0"
+  }
+}

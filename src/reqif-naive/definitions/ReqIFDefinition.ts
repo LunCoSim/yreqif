@@ -113,7 +113,7 @@ export interface  DatatypeDefinitionEnumeration extends DatatypeDefinition {
 }
 
 export interface  AttributeDefinitionEnumeration extends AttributeDefinition {
-    multiValued?; boolean//Dafult false
+    multiValued?: boolean//Dafult false
     
     definition: AttributeValueEnumeration;
     owningDefinition?: AttributeValueEnumeration;

@@ -14,9 +14,9 @@ npm install -g fast-xml-parser
 
 import { sample_xml } from "./sample_xml";
 import { parse } from "fast-xml-parser";
-import { ToArray } from "./utils";
-import { DatatypeDefinitionString } from "./reqif-naive/definitions/ReqIFDefinition";
-import { SpecType } from "./reqif-naive/content/ReqIFSpecTypes";
+import { DatatypeDefinitionString } from "../src/reqif-naive/definitions/ReqIFDefinition";
+import { SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
+import { ToArray } from "../src/utils";
 
 // import { ReqIF } from "./reqif-naive/ReqIF"
 

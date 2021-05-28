@@ -23,16 +23,14 @@ import { Identifiable } from "../src/reqif-naive/definitions/ReqIFBasicClasses";
 import { SpecObject } from "../src/reqif-naive/content/ReqIFSpecObject";
 import { Specification } from "../src/reqif-naive/content/ReqIFSpecification";
 
-// import { ReqIF } from "./reqif-naive/ReqIF"
-
-// const r = new ReqIF();
-
-
-const j = parse(sample_xml, {
+//parsing source
+const parsed_xml = parse(sample_xml, {
     ignoreAttributes : false,
 });
 
-const source_reqif = j['REQ-IF'];
+//Loading raw data from parsed xml
+const source_reqif = parsed_xml['REQ-IF'];
+
 const source_header = source_reqif['THE-HEADER']['REQ-IF-HEADER'];
 const source_content = source_reqif['CORE-CONTENT']['REQ-IF-CONTENT'];
 //content properties
@@ -42,86 +40,114 @@ const source_specObjects = source_content['SPEC-OBJECTS'];
 const source_specifications = source_content['SPECIFICATIONS'];
 
 
-//General map
-let GeneralMap: { [key: string]: any } = {
+//Mapping classes to values from XML
 
-    //DATA_TYPE
-    "DATATYPE-DEFINITION-STRING": (v: any): DatatypeDefinition => {
-        return new DatatypeDefinitionString ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-            maxLength: v["@_MAX-LENGTH"]
-        }); 
-    }, 
-    "DATATYPE-DEFINITION-INTEGER": (v: any): DatatypeDefinition => {
-        return new DatatypeDefinitionInteger ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-        }); 
-    },
-    "DATATYPE-DEFINITION-ENUMERATION": (v: any): DatatypeDefinition => {
-        return new DatatypeDefinitionEnumeration ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-        }); 
-    },
+let ExtractingFunctionsMap: {[key: string]: any} = {};
 
-    //Spec Types
-    "SPEC-OBJECT-TYPE": (v: any): SpecType => {
-        return new SpecObjectType ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-            specAttributes: v["SPEC-ATTRIBUTES"]
-        }); 
-    }, 
-    "SPECIFICATION-TYPE": (v: any): SpecType => {
-        return new SpecificationType ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-            specAttributes: v["SPEC-ATTRIBUTES"]
-        }); 
-    },
+ExtractingFunctionsMap[Identifiable.name] = (v: any): unknown => {
+    return {
+        desc: v["@_DESC"],
+        identifier: v["@_IDENTIFIER"],
+        lastChange: v["@_LAST-CHANGED"],
+        longName: v["@_LONG-NAME"],
+    }
+}
+
+ExtractingFunctionsMap[DatatypeDefinitionString.name] = (v: any): unknown => {
+    return {
+        maxLength: v["@_MAX-LENGTH"]
+    };
+}
+
+ExtractingFunctionsMap[DatatypeDefinitionInteger.name] = (v: any): unknown => {
+    return {
+        // maxLength: v["@_MAX-LENGTH"]
+    }
+}
+
+ExtractingFunctionsMap[DatatypeDefinitionEnumeration.name] = (v: any): unknown => {
+    return {
+        // maxLength: v["@_MAX-LENGTH"]
+    }
+}
+
+//Spec Types
+ExtractingFunctionsMap[SpecObjectType.name] = (v: any): unknown => {
+    return {
+        specAttributes: v["SPEC-ATTRIBUTES"]
+    }
+}
+
+ExtractingFunctionsMap[SpecificationType.name] = (v: any): unknown => {
+    return {
+        specAttributes: v["SPEC-ATTRIBUTES"]
+    }
+}
 
 //Spec objects
-    "SPEC-OBJECT": (v: any): SpecObject => {
-        return new SpecObject ({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-            values: v["VALUES"],
-            type: v["TYPE"]
-        }); 
-    }, 
+ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
+    return {
+        values: v["VALUES"],
+        type: v["TYPE"]
+    }
+}
 
 //Specification
-    "SPECIFICATION": (v: any): Specification => {
-        return new Specification({
-            desc: v["@_DESC"],
-            identifier: v["@_IDENTIFIER"],
-            lastChange: v["@_LAST-CHANGED"],
-            longName: v["@_LONG-NAME"],
-            values: v["VALUES"],
-            type: v["TYPE"],
-            children: v["CHILDREN"]
-        });
-    },
+ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
+    return {
+        values: v["VALUES"],
+        type: v["TYPE"],
+        children: v["CHILDREN"]
+    }
+}
+
+//-------------
+//Mapping 
+
+const XMLMap: { [key: string]: any } = {
+    "DATATYPE-DEFINITION-STRING": DatatypeDefinitionString, 
+    "DATATYPE-DEFINITION-INTEGER": DatatypeDefinitionInteger,
+    "DATATYPE-DEFINITION-ENUMERATION": DatatypeDefinitionEnumeration,
+
+    //Spec Types
+    "SPEC-OBJECT-TYPE": SpecObjectType, 
+    "SPECIFICATION-TYPE": SpecificationType,
+
+//Spec objects
+    "SPEC-OBJECT": SpecObject, 
+
+//Specification
+    "SPECIFICATION": Specification,
 }
 
 //---------------------
-function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[] {
-    let res =  Object.keys(source).map((key) => {
-        return ToArray(source[key]).map(propsMap[key]);
+//@param Type: 
+//
+
+Identifiable.prototype 
+function extractProps(classProto: any, data: any): unknown {
+    console.log('extractProps: ', classProto.name);
+
+    if(Object.getPrototypeOf(classProto) == null) {
+        return {};
+    }
+    
+    var res = extractProps(Object.getPrototypeOf(classProto), data);
+    
+    var extractingFunction = ExtractingFunctionsMap[classProto.name];
+
+    if(extractingFunction != undefined) {
+        res = Object.assign({}, res, extractingFunction(data));
+    }
+
+    return res;
+}
+
+function extractData<Type>(source: any): Type[] {
+    var res = Object.keys(source).map(function(className) {
+        return ToArray(source[className]).map((data) => {
+            return new XMLMap[className](extractProps(XMLMap[className], data))
+        });
     });
 
     return _.flattenDeep(res) as Type[];
@@ -129,15 +155,21 @@ function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[]
 
 //-------------Data types
 
+let datatypes: DatatypeDefinition[];
+let specTypes: SpecType[];
+let specObjects: SpecType[];
+let specifications: Specification[];
 
-let datatypes:DatatypeDefinition[] = extractData<SpecType>(GeneralMap, source_datatypes);
-let specTypes: SpecType[] = extractData<SpecType>(GeneralMap, source_specTypes);
-let specObjects: SpecType[] = extractData<SpecType>(GeneralMap, source_specObjects);
-let specifications: Specification[] = extractData<Specification>(GeneralMap, source_specifications);
-// let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
-// let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
+datatypes = extractData<DatatypeDefinition>(source_datatypes);
+
+// let specTypes: SpecType[] = extractData<SpecType>(GeneralMap, source_specTypes);
+// let specObjects: SpecType[] = extractData<SpecType>(GeneralMap, source_specObjects);
+// let specifications: Specification[] = extractData<Specification>(GeneralMap, source_specifications);
+// // let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
+// // let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
 
 console.log("DataTypes: ", datatypes);
-console.log("SpecTypes: ", specTypes);
-console.log("SpecObjects: ", specObjects);
-console.log("Specifications: ", specifications);
+// console.log("SpecTypes: ", specTypes);
+// console.log("SpecObjects: ", specObjects);
+// console.log("Specifications: ", specifications);
+

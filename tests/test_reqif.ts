@@ -70,21 +70,8 @@ let DataTypeMap: { [key: string]: any } = {
     },
 }
 
-//-------------Data types
-let datatypes:DatatypeDefinition[] = [];
-
-function extractDatatype(type: any): unknown {
-    return Object.keys(type).map((key) => {
-        return ToArray(type[key]).map(DataTypeMap[key]);
-    });
-}
-
-datatypes = _.flattenDeep(ToArray(source_datatypes).map(extractDatatype)) as DatatypeDefinition[];
-
-console.log("DataTypes: ", datatypes);
-
 //----------------
-//Spec TYpes
+//Spec Types
 
 let SpecTypeMap: { [key: string]: any } = {
     "SPEC-OBJECT-TYPE": (v: any): SpecType => {
@@ -107,14 +94,20 @@ let SpecTypeMap: { [key: string]: any } = {
     },
 }
 
-let specTypes: SpecType[] = [];
-
-function extractSpectype(type: any): unknown {
-    return Object.keys(type).map((key) => {
-        return ToArray(type[key]).map(SpecTypeMap[key]);
+//---------------------
+function extractData<Type>(propsMap:{ [key: string]: any }, source: any): Type[] {
+    let res =  Object.keys(source).map((key) => {
+        return ToArray(source[key]).map(propsMap[key]);
     });
+
+    return _.flattenDeep(res) as Type[];
 }
 
-specTypes = _.flattenDeep(ToArray(source_specTypes).map(extractSpectype)) as SpecType[];
+//-------------Data types
 
+
+let datatypes:DatatypeDefinition[] = extractData<SpecType>(DataTypeMap, source_datatypes);
+let specTypes: SpecType[] = extractData<SpecType>(SpecTypeMap, source_specTypes);
+
+console.log("DataTypes: ", datatypes);
 console.log("SpecTypes: ", specTypes);

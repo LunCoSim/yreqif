@@ -83,7 +83,7 @@ ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
 }
 
 //Specification
-ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
+ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
     return {
         values: v["VALUES"],
         type: v["TYPE"],

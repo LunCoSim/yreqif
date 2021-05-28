@@ -7,34 +7,37 @@ import { SpecRelation } from "./ReqIFSpecRelation";
 
 //------------------------------------------------------------------------------
 
-export interface  SpecType extends Identifiable {
-    specAttributes: AttributeDefinition[];
+export class SpecType extends Identifiable {
+    specAttributes?: AttributeDefinition[];
 
-    // constructor() {
-    //     super()
-
-    //     this.specAttributes = []
-    // }
+    constructor(props?: SpecType) {
+        super(props);
+        if(props) {
+            this.specAttributes = props['specAttributes'];
+        }
+    }
 }
 
-export interface  SpecificationType extends SpecType {
-    specification: Specification[];
+export class  SpecificationType extends SpecType {
+    specification?: Specification[];
 
-    // constructor() {
-    //     super()
-
-    //     this.specification = [];
-    // }
+    constructor(props?: SpecificationType) {
+        super(props);
+        if(props) {
+            this.specification = props['specification'];
+        }
+    }
 }
 
-export interface  SpecObjectType extends SpecType {
-    specObject: SpecObject[];
+export class  SpecObjectType extends SpecType {
+    specObject?: SpecObject[];
 
-    // constructor() {
-    //     super();
-
-    //     this.specObject = [];
-    // }
+    constructor(props?: SpecObjectType) {
+        super(props);
+        if(props) {
+            this.specObject = props['specObject'];
+        }
+    }
 }
 
 export interface  SpecRelationType extends SpecType {

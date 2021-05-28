@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "tsc | node ./dist/tests/test_reqif.js"
+    "test": "tsc; node ./dist/tests/test_reqif.js"
   },
   "dependencies": {
     "@types/lodash": "^4.14.170",

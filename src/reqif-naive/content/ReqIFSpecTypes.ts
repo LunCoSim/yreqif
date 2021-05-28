@@ -40,14 +40,15 @@ export class  SpecObjectType extends SpecType {
     }
 }
 
-export interface  SpecRelationType extends SpecType {
-    specRelation: SpecRelation[];
+export class  SpecRelationType extends SpecType {
+    specRelation?: SpecRelation[];
 
-    // constructor() {
-    //     super();
-
-    //     this.specRelation = [];
-    // }
+    constructor(props?: SpecRelationType) {
+        super(props);
+        if(props) {
+            this.specRelation = props['specRelation'];
+        }
+    }
 }
 
 export interface  RelationGroupType extends SpecType {

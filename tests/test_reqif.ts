@@ -17,7 +17,7 @@ import * as _ from "lodash";
 import { sample_xml1 as sample_xml } from "./sample_xml";
 import { parse } from "fast-xml-parser";
 import { DatatypeDefinition, DatatypeDefinitionString, DatatypeDefinitionInteger, DatatypeDefinitionEnumeration } from "../src/reqif-naive/definitions/ReqIFDefinition";
-import { SpecificationType, SpecObjectType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
+import { SpecificationType, SpecObjectType, SpecRelationType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
 import { ToArray } from "../src/utils";
 import { Identifiable } from "../src/reqif-naive/definitions/ReqIFBasicClasses";
 import { SpecObject } from "../src/reqif-naive/content/ReqIFSpecObject";
@@ -112,7 +112,8 @@ const XMLMap: { [key: string]: any } = {
     //Spec Types
     "SPEC-OBJECT-TYPE": SpecObjectType, 
     "SPECIFICATION-TYPE": SpecificationType,
-
+    "SPEC-RELATION-TYPE": SpecRelationType,
+    
 //Spec objects
     "SPEC-OBJECT": SpecObject, 
 
@@ -124,14 +125,16 @@ const XMLMap: { [key: string]: any } = {
 //@param Type: 
 //
 
-Identifiable.prototype 
 function extractProps(classProto: any, data: any): unknown {
-    console.log('extractProps: ', classProto.name);
-
-    if(Object.getPrototypeOf(classProto) == null) {
+    if(!classProto) {
         return {};
     }
-    
+
+    if((Object.getPrototypeOf(classProto) == null) || (Object.getPrototypeOf(classProto) == undefined)) {
+        return {};
+    }
+    // console.log('extractProps: ', classProto.name);
+
     var res = extractProps(Object.getPrototypeOf(classProto), data);
     
     var extractingFunction = ExtractingFunctionsMap[classProto.name];
@@ -146,7 +149,13 @@ function extractProps(classProto: any, data: any): unknown {
 function extractData<Type>(source: any): Type[] {
     var res = Object.keys(source).map(function(className) {
         return ToArray(source[className]).map((data) => {
-            return new XMLMap[className](extractProps(XMLMap[className], data))
+            var clas = XMLMap[className];
+            if(clas) {
+                return new XMLMap[className](extractProps(XMLMap[className], data))
+            } else {
+                console.error('Class: ', className, ' not found')
+            }
+            
         });
     });
 
@@ -161,15 +170,15 @@ let specObjects: SpecType[];
 let specifications: Specification[];
 
 datatypes = extractData<DatatypeDefinition>(source_datatypes);
+specTypes = extractData<SpecType>(source_specTypes);
+specObjects = extractData<SpecObject>(source_specObjects);
+specifications = extractData<Specification>(source_specifications);
 
-// let specTypes: SpecType[] = extractData<SpecType>(GeneralMap, source_specTypes);
-// let specObjects: SpecType[] = extractData<SpecType>(GeneralMap, source_specObjects);
-// let specifications: Specification[] = extractData<Specification>(GeneralMap, source_specifications);
 // // let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
 // // let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
 
 console.log("DataTypes: ", datatypes);
-// console.log("SpecTypes: ", specTypes);
-// console.log("SpecObjects: ", specObjects);
-// console.log("Specifications: ", specifications);
+console.log("SpecTypes: ", specTypes);
+console.log("SpecObjects: ", specObjects);
+console.log("Specifications: ", specifications);
 

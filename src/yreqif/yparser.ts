@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { parse as fast_xml_parse} from "fast-xml-parser";
 import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { AttributeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { AttributeDefinition, AttributeDefinitionInteger, AttributeValueInteger, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
 import { SpecificationType, SpecObjectType, SpecRelationType } from "../reqif-naive/content/ReqIFSpecTypes";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
 import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
@@ -80,7 +80,7 @@ ExtractingFunctionsMap[SpecificationType.name] = (v: any): unknown => {
 ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
     return {
         values: extractData(v["VALUES"]),
-        type: extractData(v["TYPE"])
+        // type: extractData(v["TYPE"])
     }
 }
 
@@ -88,7 +88,7 @@ ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
 ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
     return {
         values: extractData(v["VALUES"]),
-        type: extractData(v["TYPE"]),
+        // type: extractData(v["TYPE"]),
         children: extractData(v["CHILDREN"])
     }
 }
@@ -120,11 +120,23 @@ const XMLMap: { [key: string]: any } = {
 //-----------
     "ATTRIBUTE-DEFINITION-STRING": AttributeDefinitionString,
     "ATTRIBUTE-VALUE-STRING": AttributeValueString,
+
+    "ATTRIBUTE-DEFINITION-INTEGER": AttributeDefinitionInteger,
+    "ATTRIBUTE-VALUE-INTEGER": AttributeValueInteger,
 }
+
+const RefTypes: string[] = [
+    "DATATYPE-DEFINITION-STRING-REF", 
+    "SPECIFICATION-TYPE-REF",
+    "SPEC-OBJECT-TYPE-REF",
+    "DATATYPE-DEFINITION-INTEGER-REF"
+]
 
 //---------------------
 //@param Type: 
 //
+
+let INDEX: {[key: string]: any} = {};
 
 export function extractProps(classProto: any, data: any): unknown {
     if(!classProto) {
@@ -161,18 +173,36 @@ function makeClassFromDate() {
 
 }
 
-export function extractData<Type>(source: any): Type[] {
-    var res = Object.keys(source).map(function(className) {
-        return ToArray(source[className]).map((data) => {
-            var mappedClass = XMLMap[className];
-            if(mappedClass) {
-                return new mappedClass(extractProps(XMLMap[className], data))
-            } else {
-                console.error('***************** Class not found: ', className)
-            }
-            
-        });
-    });
+function extractRef() {
 
-    return _.flattenDeep(res) as Type[];
+}
+
+export function extractData<Type>(source: any) {
+    if(source) {
+        let firstClassName: string = Object.keys(source)[0]; 
+        if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
+            return INDEX[source[firstClassName]];
+        } else {
+            var res = Object.keys(source).map(function(className: string) {
+                return ToArray(source[className]).map((data) => {
+                    var mappedClass = XMLMap[className];
+                    if(mappedClass) {
+                        var temp = new mappedClass(extractProps(XMLMap[className], data));
+        
+                        if(temp instanceof Identifiable) {
+                            INDEX[temp.identifier] = temp;
+                        }
+        
+                        return temp;
+                    } else {
+                        console.error('***************** Class not found: ', className)
+                    }
+                    
+                });
+            });
+        
+            return _.flattenDeep(res) as Type[];
+        }
+    }
+    
 }

@@ -191,14 +191,30 @@ export class  DatatypeDefinitionInteger extends DatatypeDefinitionSimple {
     }
 }
 
-export interface  AttributeDefinitionInteger extends AttributeDefinitionSimple {
-    definition: AttributeValueInteger;
+export class AttributeDefinitionInteger extends AttributeDefinitionSimple {
+    definition?: AttributeValueInteger;
     owningDefinition?: AttributeValueInteger;
+
+    constructor(props?: AttributeDefinitionInteger) {
+        super(props);
+        if(props) {
+            this.definition = props['definition'];
+            this.owningDefinition = props['owningDefinition'];
+        }
+    }
 }
 
-export interface  AttributeValueInteger extends AttributeValueSimple {
-    theValue: number;
+export class AttributeValueInteger extends AttributeValueSimple {
+    theValue?: number;
     defaultValue?: AttributeDefinitionInteger;
+
+    constructor(props?: AttributeValueInteger) {
+        super(props);
+        if(props) {
+            this.theValue = props['theValue'];
+            this.defaultValue = props['defaultValue'];
+        }
+    }
 }
 
 

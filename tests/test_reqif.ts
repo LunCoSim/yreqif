@@ -18,7 +18,7 @@ import { SpecObjectType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTy
 import { DatatypeDefinition } from "../src/reqif-naive/definitions/ReqIFDefinition";
 import { extractData, yparse } from "../src/yreqif/yparser";
 
-import { sample_xml as sample_xml } from "./sample_xml";
+import { sample_xml, sample_xml1, sample_xml2 } from "./sample_xml";
 
 
 //-------------Data types
@@ -28,18 +28,23 @@ let specTypes: SpecType[];
 let specObjects: SpecObjectType[];
 let specifications: Specification[];
 
-let data = yparse(sample_xml);
+let data = yparse(sample_xml1);
 
-datatypes = extractData<DatatypeDefinition>(data.source_datatypes);
-specTypes = extractData<SpecType>(data.source_specTypes);
-specObjects = extractData<SpecObject>(data.source_specObjects);
-specifications = extractData<Specification>(data.source_specifications);
+datatypes = extractData<DatatypeDefinition>(data.source_datatypes) || [];
+specTypes = extractData<SpecType>(data.source_specTypes) || [];
+specObjects = extractData<SpecObject>(data.source_specObjects) || [];
+specifications = extractData<Specification>(data.source_specifications) || [];
 
 // // let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
 // // let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
 
-console.log("DataTypes: ", datatypes);
-console.log("SpecTypes: ", specTypes);
+console.log(JSON.stringify(datatypes, null, 4));
+console.log(JSON.stringify(specTypes, null, 4));
+console.log(JSON.stringify(specObjects, null, 4));
+console.log(JSON.stringify(specifications, null, 4));
+
+// console.log("DataTypes: ", datatypes);
+// console.log("SpecTypes: ", specTypes);
 // console.log("SpecObjects: ", specObjects);
-console.log("Specifications: ", specifications);
+// console.log("Specifications: ", specifications);
 

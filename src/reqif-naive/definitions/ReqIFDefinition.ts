@@ -27,13 +27,13 @@ export class AttributeDefinition extends AccessControlledElement {
 
 
 export class AttributeValue {
-    specElAt?: SpecElementWithAttributes[];
-    defaultValue?: AttributeDefinition;
+    // specElAt?: SpecElementWithAttributes[];
+    // defaultValue?: AttributeDefinition;
+    definition?: AttributeDefinition | DatatypeDefinition;
 
     constructor(props?: AttributeValue) {
         if(props) {
-            this.specElAt = props['specElAt'];
-            this.defaultValue = props['defaultValue'];
+            this.definition = props['definition'];
         }
     }
 }
@@ -51,20 +51,22 @@ export class  DatatypeDefinitionSimple extends DatatypeDefinition {
 }
 
 export class  AttributeDefinitionSimple extends AttributeDefinition {
-    definition?: AttributeValueSimple;
-    owningDefinition?: AttributeValueSimple;
+    // definition?: AttributeValueSimple;
+    // owningDefinition?: AttributeValueSimple;
 
-    constructor(props?: AttributeDefinitionSimple) {
-        super(props);
-        if(props) {
-            this.definition = props['definition'];
-            this.owningDefinition = props['owningDefinition'];
-        }
-    }
+    // constructor(props?: AttributeDefinitionSimple) {
+    //     super(props);
+    //     if(props) {
+    //         this.definition = props['definition'];
+    //         this.owningDefinition = props['owningDefinition'];
+    //     }
+    // }
 }
 
 export class  AttributeValueSimple extends AttributeValue {
-    dummy?: string; //ToDO find a better way to baypass issue
+    constructor(props?: AttributeValueSimple) {
+        super(props);
+    }
 }
 
 /*

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { parse as fast_xml_parse} from "fast-xml-parser";
-import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { AttributeDefinition, AttributeDefinitionInteger, AttributeValueInteger, DatatypeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { AccessControlledElement, Identifiable, SpecElementWithAttributes } from "../reqif-naive/definitions/ReqIFBasicClasses";
+import { AttributeDefinition, AttributeDefinitionInteger, AttributeDefinitionSimple, AttributeValue, AttributeValueInteger, AttributeValueSimple, DatatypeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionSimple, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
 import { SpecificationType, SpecObjectType, SpecRelationType, SpecType } from "../reqif-naive/content/ReqIFSpecTypes";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
 import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
@@ -58,6 +58,22 @@ ExtractingFunctionsMap[Identifiable.name] = (v: any): unknown => {
     }
 }
 
+ExtractingFunctionsMap[AccessControlledElement.name] = (v: any): unknown => {
+    return {
+        isEditable: v["IS-EDITABLE"],
+    }
+}
+
+
+
+ExtractingFunctionsMap[DatatypeDefinition.name] = (v: any): unknown => {
+    return {};
+}
+
+ExtractingFunctionsMap[DatatypeDefinitionSimple.name] = (v: any): unknown => {
+    return {};
+}
+
 ExtractingFunctionsMap[DatatypeDefinitionString.name] = (v: any): unknown => {
     return {
         maxLength: v["@_MAX-LENGTH"]
@@ -76,40 +92,99 @@ ExtractingFunctionsMap[DatatypeDefinitionEnumeration.name] = (v: any): unknown =
     }
 }
 
-//Spec Types
-ExtractingFunctionsMap[SpecObjectType.name] = (v: any): unknown => {
+//Spec types
+
+ExtractingFunctionsMap[SpecType.name] = (v: any): unknown => {
     return {
         specAttributes: extractData(v["SPEC-ATTRIBUTES"])
     }
+}
+
+ExtractingFunctionsMap[SpecObjectType.name] = (v: any): unknown => {
+    return {}
 }
 
 ExtractingFunctionsMap[SpecificationType.name] = (v: any): unknown => {
+    return {}
+}
+
+ExtractingFunctionsMap[SpecRelationType.name] = (v: any): unknown => {
+    return {}
+}
+
+
+
+//Spec objects
+
+ExtractingFunctionsMap[SpecElementWithAttributes.name] = (v: any): unknown => {
     return {
-        specAttributes: extractData(v["SPEC-ATTRIBUTES"])
+        values: extractData(v["VALUES"]),
     }
 }
 
-//Spec objects
 ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
     return {
-        values: extractData(v["VALUES"]),
         // type: extractData(v["TYPE"])
     }
 }
 
+ExtractingFunctionsMap[SpecHierarchy.name] = (v: any): unknown => {
+    return {
+        // type: extractData(v["TYPE"])
+    }
+}
+
+
+
 //Specification
 ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
     return {
-        values: extractData(v["VALUES"]),
         // type: extractData(v["TYPE"]),
         children: extractData(v["CHILDREN"])
     }
 }
 
+//Attribute definition
 ExtractingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
     return {
         type: getFirstElement<any>(extractData(v["TYPE"]))
     }
+}
+
+ExtractingFunctionsMap[AttributeDefinitionSimple.name] = (v: any): unknown => {
+    return {};
+}
+
+ExtractingFunctionsMap[AttributeDefinitionString.name] = (v: any): unknown => {
+    return {};
+}
+
+ExtractingFunctionsMap[AttributeDefinitionInteger.name] = (v: any): unknown => {
+    return {};
+}
+
+//Attribute values
+
+ExtractingFunctionsMap[AttributeValue.name] = (v: any): unknown => {
+    return {
+        definition: getFirstElement<any>(extractData(v["DEFINITION"]))
+    };
+}
+
+ExtractingFunctionsMap[AttributeValueSimple.name] = (v: any): unknown => {
+    return {};
+}
+
+ExtractingFunctionsMap[AttributeValueString.name] = (v: any): unknown => {
+    return {
+        theValue: v["@_THE-VALUE"]
+    };
+}
+
+ExtractingFunctionsMap[AttributeValueInteger.name] = (v: any): unknown => {
+    return {
+        theValue: parseInt(v["@_THE-VALUE"])
+    };
 }
 
 //------------------------
@@ -178,7 +253,9 @@ const RefTypes: string[] = [
     "DATATYPE-DEFINITION-STRING-REF", 
     "SPECIFICATION-TYPE-REF",
     "SPEC-OBJECT-TYPE-REF",
-    "DATATYPE-DEFINITION-INTEGER-REF"
+    "DATATYPE-DEFINITION-INTEGER-REF",
+    "ATTRIBUTE-DEFINITION-STRING-REF",
+    "ATTRIBUTE-DEFINITION-INTEGER-REF"
 ]
 
 //---------------------
@@ -188,14 +265,19 @@ const RefTypes: string[] = [
 let INDEX: {[key: string]: any} = {};
 
 export function extractProps(classProto: any, data: any): unknown {
+    //------Excluding the highest parent
     if(!classProto) {
-        return {};
+        return;
     }
 
     if((Object.getPrototypeOf(classProto) == null) || (Object.getPrototypeOf(classProto) == undefined)) {
-        return {};
+        return;
     }
-    // console.log('extractProps: ', classProto.name);
+
+    if(classProto['name'] == "") {
+        return;
+    }
+    //------Finish: Excluding the highest parent
 
     var res = extractProps(Object.getPrototypeOf(classProto), data);
 
@@ -207,6 +289,8 @@ export function extractProps(classProto: any, data: any): unknown {
         var extracted = extractingFunction(data);
         
         res = Object.assign({}, res, extracted);
+    } else {
+        console.error("Extraction function not found for: ", classProto.name)
     }
     
     

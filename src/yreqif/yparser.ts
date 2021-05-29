@@ -1,14 +1,17 @@
 import * as _ from "lodash";
 import { parse as fast_xml_parse} from "fast-xml-parser";
 import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { AttributeDefinition, AttributeDefinitionInteger, AttributeValueInteger, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
-import { SpecificationType, SpecObjectType, SpecRelationType } from "../reqif-naive/content/ReqIFSpecTypes";
+import { AttributeDefinition, AttributeDefinitionInteger, AttributeValueInteger, DatatypeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { SpecificationType, SpecObjectType, SpecRelationType, SpecType } from "../reqif-naive/content/ReqIFSpecTypes";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
 import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
 import { ToArray } from "../utils";
 
 import { AttributeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition"; 
 import { AttributeValueString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { ReqIF } from "../reqif-naive/ReqIF";
+import { ReqIFHeader } from "../reqif-naive/ReqIFHeader";
+import { ReqIFContent } from "../reqif-naive/ReqIFContent";
 
 //-------------------------------------
 
@@ -17,9 +20,10 @@ export function yparse(xml: string) {
     const parsed_xml = fast_xml_parse(xml, {
         ignoreAttributes : false,
     });
-    console.log(parsed_xml);
+    // console.log(parsed_xml['REQ-IF']['CORE-CONTENT']);
 
     return {
+        source: parsed_xml,
         source_reqif: parsed_xml['REQ-IF'],
 
         source_header: parsed_xml['REQ-IF']['THE-HEADER']['REQ-IF-HEADER'],
@@ -29,6 +33,15 @@ export function yparse(xml: string) {
         source_specTypes: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPEC-TYPES'],
         source_specObjects: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPEC-OBJECTS'],
         source_specifications: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPECIFICATIONS'],
+    }
+}
+
+//----------------------
+//helper parser function
+
+function getFirstElement<Type>(data: any [] | void) {
+    if(data) {
+        return data[0] as Type;
     }
 }
 
@@ -95,7 +108,38 @@ ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
 
 ExtractingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
     return {
-        type: extractData(v["TYPE"])
+        type: getFirstElement<any>(extractData(v["TYPE"]))
+    }
+}
+
+//------------------------
+
+ExtractingFunctionsMap[ReqIF.name] = (v: any): unknown => {
+    return {
+        coreContent: getFirstElement<ReqIFContent>(extractData(v["CORE-CONTENT"])),
+        theHeader: getFirstElement<ReqIFHeader>(extractData(v["THE-HEADER"])),
+    }
+}
+
+ExtractingFunctionsMap[ReqIFHeader.name] = (v: any): unknown => {
+    return {
+        comment: v["COMMENT"],
+        creationTime: v["CREATION-TIME"], //TODO: Parse date
+        // repositoryId?: string; //[0..1] TODO
+        reqIFToolId: v["REQ-IF-TOOL-ID"],
+        reqIFVersion: v["REQ-IF-VERSION"],
+        sourceToolId: v["SOURCE-TOOL-ID"],
+        title: v["TITLE"],
+    }
+}
+
+ExtractingFunctionsMap[ReqIFContent.name] = (v: any): unknown => {
+    return {
+        dataTypes: extractData(v["DATATYPES"]) as DatatypeDefinition[],
+        specTypes: extractData(v["SPEC-TYPES"]) as SpecType[],
+        specObjects: extractData(v["SPEC-OBJECTS"]) as SpecObject[],
+        // specRelations: extractData<SpecRelations[]>(v["SPEC-RELATIONS"]),
+        specifications: extractData(v["SPECIFICATIONS"]) as Specification[],
     }
 }
 
@@ -103,21 +147,26 @@ ExtractingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
 //Mapping 
 
 const XMLMap: { [key: string]: any } = {
+    //
+    "REQ-IF": ReqIF,
+    "REQ-IF-HEADER": ReqIFHeader,
+    "REQ-IF-CONTENT": ReqIFContent,
+    //Data types
     "DATATYPE-DEFINITION-STRING": DatatypeDefinitionString, 
     "DATATYPE-DEFINITION-INTEGER": DatatypeDefinitionInteger,
     "DATATYPE-DEFINITION-ENUMERATION": DatatypeDefinitionEnumeration,
 
-    //Spec Types
+    //Spec types
     "SPEC-OBJECT-TYPE": SpecObjectType, 
     "SPECIFICATION-TYPE": SpecificationType,
     "SPEC-RELATION-TYPE": SpecRelationType,
     
-//Spec objects
+    //Spec objects
     "SPEC-OBJECT": SpecObject, 
     "SPEC-HIERARCHY": SpecHierarchy,
     "SPECIFICATION": Specification,
 
-//-----------
+    //Attributes
     "ATTRIBUTE-DEFINITION-STRING": AttributeDefinitionString,
     "ATTRIBUTE-VALUE-STRING": AttributeValueString,
 
@@ -177,11 +226,11 @@ function extractRef() {
 
 }
 
-export function extractData<Type>(source: any) {
+export function extractData(source: any): any[] | void {
     if(source) {
         let firstClassName: string = Object.keys(source)[0]; 
         if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
-            return INDEX[source[firstClassName]];
+            return [INDEX[source[firstClassName]]];
         } else {
             var res = Object.keys(source).map(function(className: string) {
                 return ToArray(source[className]).map((data) => {
@@ -200,9 +249,15 @@ export function extractData<Type>(source: any) {
                     
                 });
             });
-        
-            return _.flattenDeep(res) as Type[];
+            
+            return _.flattenDeep(res);
         }
     }
     
+}
+
+
+export function extract(data: unknown) {
+    INDEX = {};
+    return getFirstElement<ReqIFHeader>(extractData(data));
 }

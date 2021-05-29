@@ -5,17 +5,19 @@ import { ReqIFHeader } from "./ReqIFHeader"
 import { ReqIFContent } from "./ReqIFContent"
 
 
-export interface ReqIF {
-    lang: string; //[0..1]
-    theHeader: ReqIFHeader;
-    coreContent: ReqIFContent
-    toolExtension: ReqIFToolExtension; 
+export class ReqIF {
+    lang?: string; //[0..1]
+    theHeader?: ReqIFHeader;
+    coreContent?: ReqIFContent
+    toolExtension?: ReqIFToolExtension; 
 
-    // constructor() {
-    //     this.lang = "en";
-    //     this.theHeader = new ReqIFHeader();
-    //     this.coreContent = new ReqIFContent();
-    //     this.toolExtension = new ReqIFToolExtension();
-    // }
+    constructor(props?: ReqIF) {
+        if(props) {
+            this.lang = props['lang'];
+            this.theHeader = props['theHeader'];
+            this.coreContent = props['coreContent'];
+            this.toolExtension = props['toolExtension'];
+        }
+    }
 }
 

@@ -5,20 +5,22 @@ import { Specification } from "./content/ReqIFSpecification"
 import { RelationGroup } from "./content/ReqIFRelationGroup"
 import { DatatypeDefinition } from "./definitions/ReqIFDefinition"
 
-export interface  ReqIFContent {
-    dataTypes: DatatypeDefinition[];
-    specTypes: SpecType[];
-    specObjects: SpecObject[];
-    specRelations: SpecRelation[];
-    specifications: Specification[];
-    specRelationsGroup: RelationGroup[];
+export class ReqIFContent {
+    dataTypes?: DatatypeDefinition[];
+    specTypes?: SpecType[];
+    specObjects?: SpecObject[];
+    specRelations?: SpecRelation[];
+    specifications?: Specification[];
+    specRelationsGroup?: RelationGroup[];
 
-    // constructor() {
-    //     this.dataTypes = [];
-    //     this.specTypes = [];
-    //     this.specObjects = [];
-    //     this.specRelations = [];
-    //     this.specifications = [];
-    //     this.specRelationsGroup = [];
-    // }
+    constructor(props?: ReqIFContent) {
+        if(props) {
+            this.dataTypes = props["dataTypes"];
+            this.specTypes = props["specTypes"];
+            this.specObjects = props["specObjects"];
+            this.specRelations = props["specRelations"];
+            this.specifications = props["specifications"];
+            this.specRelationsGroup = props["specRelationsGroup"];
+        }
+    }
 }

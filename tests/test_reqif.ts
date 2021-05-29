@@ -16,7 +16,8 @@ import { Specification } from "../src/reqif-naive/content/ReqIFSpecification";
 import { SpecObject } from "../src/reqif-naive/content/ReqIFSpecObject";
 import { SpecObjectType, SpecType } from "../src/reqif-naive/content/ReqIFSpecTypes";
 import { DatatypeDefinition } from "../src/reqif-naive/definitions/ReqIFDefinition";
-import { extractData, yparse } from "../src/yreqif/yparser";
+import { ReqIF } from "../src/reqif-naive/ReqIF";
+import { extractData, yparse, extract } from "../src/yreqif/yparser";
 
 import { sample_xml, sample_xml1, sample_xml2 } from "./sample_xml";
 
@@ -30,18 +31,22 @@ let specifications: Specification[];
 
 let data = yparse(sample_xml1);
 
-datatypes = extractData<DatatypeDefinition>(data.source_datatypes) || [];
-specTypes = extractData<SpecType>(data.source_specTypes) || [];
-specObjects = extractData<SpecObject>(data.source_specObjects) || [];
-specifications = extractData<Specification>(data.source_specifications) || [];
+let reqif = extract(data.source) as ReqIF;
 
-// // let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
-// // let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
+// datatypes = extractData<DatatypeDefinition>(data.source_datatypes) || [];
+// specTypes = extractData<SpecType>(data.source_specTypes) || [];
+// specObjects = extractData<SpecObject>(data.source_specObjects) || [];
+// specifications = extractData<Specification>(data.source_specifications) || [];
 
-console.log(JSON.stringify(datatypes, null, 4));
-console.log(JSON.stringify(specTypes, null, 4));
-console.log(JSON.stringify(specObjects, null, 4));
-console.log(JSON.stringify(specifications, null, 4));
+// // // let specRelations: SpecRelation[] = extractData<SpecRelation>(GeneralMap, so);
+// // // let specRelationsGroup: RelationGroup[] = extractData<RelationGroup>(GeneralMap, source_specifications);
+
+// console.log(JSON.stringify(datatypes, null, 4));
+// console.log(JSON.stringify(specTypes, null, 4));
+// console.log(JSON.stringify(specObjects, null, 4));
+// console.log(JSON.stringify(specifications, null, 4));
+
+console.log(JSON.stringify(reqif, null, 4));
 
 // console.log("DataTypes: ", datatypes);
 // console.log("SpecTypes: ", specTypes);

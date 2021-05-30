@@ -18,9 +18,9 @@ parsed XML data
 ------------------------------------------------------------------------------
 */
 
-//Defining in that manner because value of Class.name property is calculated at runtime
 export let ExtractingFunctionsMap: {[key: string]: any} = {};
 
+//Initialisation is done in that manner because values of Class.name propertys are calculated at runtime
 ExtractingFunctionsMap[Identifiable.name] = (v: any): unknown => {
     return {
         desc: v["@_DESC"],
@@ -220,11 +220,10 @@ export const XMLMap: { [key: string]: any } = {
 
 /*
 ------------------------------------------------------------------------------
-Basic abstract interface es
+List of ref types
 ------------------------------------------------------------------------------
 */
 
-//List of ref types
 export const RefTypes: string[] = [
     "DATATYPE-DEFINITION-STRING-REF", 
     "SPECIFICATION-TYPE-REF",

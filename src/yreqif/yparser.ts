@@ -1,8 +1,8 @@
-import * as _ from "lodash";
+import _ from "lodash";
+
 import { parse as fast_xml_parse} from "fast-xml-parser";
 
 import { ToArray } from "../utils";
-
 
 import { ReqIF } from "../reqif-naive/ReqIF";
 
@@ -68,38 +68,44 @@ export function extractProps(classProto: any, data: any): unknown {
     return res;
 }
 
-function makeClassFromDate() {
-
+function extractRef(source: any) {
+    let firstClassName: string = Object.keys(source)[0]; 
+    if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
+        return [INDEX[source[firstClassName]]];
+    }
 }
 
-function extractRef() {
+function addToIndex(identifiable: any): void {
+    if(identifiable instanceof Identifiable) { // adding to index here
+        INDEX[identifiable.identifier] = identifiable;
+    }
+}
 
+function makeMappedClass(className: string, data?: unknown): any {
+    var mappedClass = XMLMap[className];
+    if(mappedClass) {
+        var temp = new mappedClass(extractProps(XMLMap[className], data));
+        addToIndex(temp)
+        return temp;
+    }
 }
 
 export function extractData(source: any): any[] | void {
     if(source) {
-        let firstClassName: string = Object.keys(source)[0]; 
-        if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
-            return [INDEX[source[firstClassName]]];
+        let refClass = extractRef(source);
+
+        if(refClass) { //checking for ref types!
+            return refClass;
         } else {
             var res = Object.keys(source).map(function(className: string) {
                 return ToArray(source[className]).map((data) => {
-                    var mappedClass = XMLMap[className];
-                    if(mappedClass) {
-                        var temp = new mappedClass(extractProps(XMLMap[className], data));
-        
-                        if(temp instanceof Identifiable) {
-                            INDEX[temp.identifier] = temp;
-                        }
-        
-                        return temp;
-                    } else {
+                    var mappedClass = makeMappedClass(className, data);
+                    if(!mappedClass) {
                         console.error('***************** Class not found: ', className)
                     }
-                    
+                    return mappedClass;
                 });
             });
-            
             return _.flattenDeep(res);
         }
     }

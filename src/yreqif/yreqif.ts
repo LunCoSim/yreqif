@@ -8,8 +8,8 @@ export type yIndex = {[key: string]: any};
 //--------------------
 
 export class yReqIF {
-    reqif: ReqIF;
-    index?: yIndex;
+    reqif: ReqIF; //Plain ReqIF orbject
+    index?: yIndex; //Indexed property that contains links to all identifiable objects
 
     constructor(props?: yReqIF) {
         if(props) {

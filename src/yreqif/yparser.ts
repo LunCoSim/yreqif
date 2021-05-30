@@ -1,17 +1,14 @@
 import * as _ from "lodash";
 import { parse as fast_xml_parse} from "fast-xml-parser";
-import { AccessControlledElement, Identifiable, SpecElementWithAttributes } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { AttributeDefinition, AttributeDefinitionInteger, AttributeDefinitionSimple, AttributeValue, AttributeValueInteger, AttributeValueSimple, DatatypeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionSimple, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
-import { SpecificationType, SpecObjectType, SpecRelationType, SpecType } from "../reqif-naive/content/ReqIFSpecTypes";
-import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
-import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
+
 import { ToArray } from "../utils";
 
-import { AttributeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition"; 
-import { AttributeValueString } from "../reqif-naive/definitions/ReqIFDefinition";
+
 import { ReqIF } from "../reqif-naive/ReqIF";
-import { ReqIFHeader } from "../reqif-naive/ReqIFHeader";
-import { ReqIFContent } from "../reqif-naive/ReqIFContent";
+
+import { yReqIF, yIndex } from "./yreqif";
+import { ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
+import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
 
 //-------------------------------------
 
@@ -20,249 +17,25 @@ export function yparse(xml: string) {
     const parsed_xml = fast_xml_parse(xml, {
         ignoreAttributes : false,
     });
-    // console.log(parsed_xml['REQ-IF']['CORE-CONTENT']);
 
-    return {
-        source: parsed_xml,
-        source_reqif: parsed_xml['REQ-IF'],
-
-        source_header: parsed_xml['REQ-IF']['THE-HEADER']['REQ-IF-HEADER'],
-        source_content: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT'],
-        //content properties
-        source_datatypes: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['DATATYPES'],
-        source_specTypes: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPEC-TYPES'],
-        source_specObjects: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPEC-OBJECTS'],
-        source_specifications: parsed_xml['REQ-IF']['CORE-CONTENT']['REQ-IF-CONTENT']['SPECIFICATIONS'],
-    }
+    return parsed_xml;
 }
 
 //----------------------
 //helper parser function
 
-function getFirstElement<Type>(data: any [] | void) {
+export function getFirstElement<Type>(data: any [] | void) {
     if(data) {
         return data[0] as Type;
     }
 }
 
-//Mapping classes to values from XML
-
-let ExtractingFunctionsMap: {[key: string]: any} = {};
-
-ExtractingFunctionsMap[Identifiable.name] = (v: any): unknown => {
-    return {
-        desc: v["@_DESC"],
-        identifier: v["@_IDENTIFIER"],
-        lastChange: v["@_LAST-CHANGED"],
-        longName: v["@_LONG-NAME"],
-    }
-}
-
-ExtractingFunctionsMap[AccessControlledElement.name] = (v: any): unknown => {
-    return {
-        isEditable: v["IS-EDITABLE"],
-    }
-}
-
-
-
-ExtractingFunctionsMap[DatatypeDefinition.name] = (v: any): unknown => {
-    return {};
-}
-
-ExtractingFunctionsMap[DatatypeDefinitionSimple.name] = (v: any): unknown => {
-    return {};
-}
-
-ExtractingFunctionsMap[DatatypeDefinitionString.name] = (v: any): unknown => {
-    return {
-        maxLength: v["@_MAX-LENGTH"]
-    };
-}
-
-ExtractingFunctionsMap[DatatypeDefinitionInteger.name] = (v: any): unknown => {
-    return {
-        // maxLength: v["@_MAX-LENGTH"]
-    }
-}
-
-ExtractingFunctionsMap[DatatypeDefinitionEnumeration.name] = (v: any): unknown => {
-    return {
-        // maxLength: v["@_MAX-LENGTH"]
-    }
-}
-
-//Spec types
-
-ExtractingFunctionsMap[SpecType.name] = (v: any): unknown => {
-    return {
-        specAttributes: extractData(v["SPEC-ATTRIBUTES"])
-    }
-}
-
-ExtractingFunctionsMap[SpecObjectType.name] = (v: any): unknown => {
-    return {}
-}
-
-ExtractingFunctionsMap[SpecificationType.name] = (v: any): unknown => {
-    return {}
-}
-
-ExtractingFunctionsMap[SpecRelationType.name] = (v: any): unknown => {
-    return {}
-}
-
-
-
-//Spec objects
-
-ExtractingFunctionsMap[SpecElementWithAttributes.name] = (v: any): unknown => {
-    return {
-        values: extractData(v["VALUES"]),
-    }
-}
-
-ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
-    return {
-        // type: extractData(v["TYPE"])
-    }
-}
-
-ExtractingFunctionsMap[SpecHierarchy.name] = (v: any): unknown => {
-    return {
-        // type: extractData(v["TYPE"])
-    }
-}
-
-
-
-//Specification
-ExtractingFunctionsMap[Specification.name] = (v: any): unknown => {
-    return {
-        // type: extractData(v["TYPE"]),
-        children: extractData(v["CHILDREN"])
-    }
-}
-
-//Attribute definition
-ExtractingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
-    return {
-        type: getFirstElement<any>(extractData(v["TYPE"]))
-    }
-}
-
-ExtractingFunctionsMap[AttributeDefinitionSimple.name] = (v: any): unknown => {
-    return {};
-}
-
-ExtractingFunctionsMap[AttributeDefinitionString.name] = (v: any): unknown => {
-    return {};
-}
-
-ExtractingFunctionsMap[AttributeDefinitionInteger.name] = (v: any): unknown => {
-    return {};
-}
-
-//Attribute values
-
-ExtractingFunctionsMap[AttributeValue.name] = (v: any): unknown => {
-    return {
-        definition: getFirstElement<any>(extractData(v["DEFINITION"]))
-    };
-}
-
-ExtractingFunctionsMap[AttributeValueSimple.name] = (v: any): unknown => {
-    return {};
-}
-
-ExtractingFunctionsMap[AttributeValueString.name] = (v: any): unknown => {
-    return {
-        theValue: v["@_THE-VALUE"]
-    };
-}
-
-ExtractingFunctionsMap[AttributeValueInteger.name] = (v: any): unknown => {
-    return {
-        theValue: parseInt(v["@_THE-VALUE"])
-    };
-}
-
-//------------------------
-
-ExtractingFunctionsMap[ReqIF.name] = (v: any): unknown => {
-    return {
-        coreContent: getFirstElement<ReqIFContent>(extractData(v["CORE-CONTENT"])),
-        theHeader: getFirstElement<ReqIFHeader>(extractData(v["THE-HEADER"])),
-    }
-}
-
-ExtractingFunctionsMap[ReqIFHeader.name] = (v: any): unknown => {
-    return {
-        comment: v["COMMENT"],
-        creationTime: v["CREATION-TIME"], //TODO: Parse date
-        // repositoryId?: string; //[0..1] TODO
-        reqIFToolId: v["REQ-IF-TOOL-ID"],
-        reqIFVersion: v["REQ-IF-VERSION"],
-        sourceToolId: v["SOURCE-TOOL-ID"],
-        title: v["TITLE"],
-    }
-}
-
-ExtractingFunctionsMap[ReqIFContent.name] = (v: any): unknown => {
-    return {
-        dataTypes: extractData(v["DATATYPES"]) as DatatypeDefinition[],
-        specTypes: extractData(v["SPEC-TYPES"]) as SpecType[],
-        specObjects: extractData(v["SPEC-OBJECTS"]) as SpecObject[],
-        // specRelations: extractData<SpecRelations[]>(v["SPEC-RELATIONS"]),
-        specifications: extractData(v["SPECIFICATIONS"]) as Specification[],
-    }
-}
-
-//-------------
-//Mapping 
-
-const XMLMap: { [key: string]: any } = {
-    //
-    "REQ-IF": ReqIF,
-    "REQ-IF-HEADER": ReqIFHeader,
-    "REQ-IF-CONTENT": ReqIFContent,
-    //Data types
-    "DATATYPE-DEFINITION-STRING": DatatypeDefinitionString, 
-    "DATATYPE-DEFINITION-INTEGER": DatatypeDefinitionInteger,
-    "DATATYPE-DEFINITION-ENUMERATION": DatatypeDefinitionEnumeration,
-
-    //Spec types
-    "SPEC-OBJECT-TYPE": SpecObjectType, 
-    "SPECIFICATION-TYPE": SpecificationType,
-    "SPEC-RELATION-TYPE": SpecRelationType,
-    
-    //Spec objects
-    "SPEC-OBJECT": SpecObject, 
-    "SPEC-HIERARCHY": SpecHierarchy,
-    "SPECIFICATION": Specification,
-
-    //Attributes
-    "ATTRIBUTE-DEFINITION-STRING": AttributeDefinitionString,
-    "ATTRIBUTE-VALUE-STRING": AttributeValueString,
-
-    "ATTRIBUTE-DEFINITION-INTEGER": AttributeDefinitionInteger,
-    "ATTRIBUTE-VALUE-INTEGER": AttributeValueInteger,
-}
-
-const RefTypes: string[] = [
-    "DATATYPE-DEFINITION-STRING-REF", 
-    "SPECIFICATION-TYPE-REF",
-    "SPEC-OBJECT-TYPE-REF",
-    "DATATYPE-DEFINITION-INTEGER-REF",
-    "ATTRIBUTE-DEFINITION-STRING-REF",
-    "ATTRIBUTE-DEFINITION-INTEGER-REF"
-]
-
 //---------------------
 //@param Type: 
 //
 
-let INDEX: {[key: string]: any} = {};
+//TODO: Instead of global index create new for this exact file
+let INDEX: yIndex = {};
 
 export function extractProps(classProto: any, data: any): unknown {
     //------Excluding the highest parent
@@ -292,13 +65,6 @@ export function extractProps(classProto: any, data: any): unknown {
     } else {
         console.error("Extraction function not found for: ", classProto.name)
     }
-    
-    
-
-    // console.log(res);
-    // for(let key in Object.getOwnPropertyNames(res)) {
-    //     console.log(key);
-    // }
     return res;
 }
 
@@ -337,11 +103,18 @@ export function extractData(source: any): any[] | void {
             return _.flattenDeep(res);
         }
     }
-    
 }
 
 
 export function extract(data: unknown) {
     INDEX = {};
-    return getFirstElement<ReqIFHeader>(extractData(data));
+
+    let res = new yReqIF({
+        reqif: getFirstElement<ReqIF>(extractData(data)) as ReqIF,
+        index: INDEX
+    });
+    
+    INDEX = {};//As INDEX is global, cleaning it
+
+    return res;
 }

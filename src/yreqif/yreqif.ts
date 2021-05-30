@@ -1,15 +1,22 @@
-// import { ReqIF } from "../reqif-naive/ReqIF";
+import { ReqIF } from "../reqif-naive/ReqIF";
 
-// export class yReqIF {
-//     reqif: ReqIF,
-//     index: {[key: string]: any},
+//--------------------
+//Types and other usefull things
 
-//     constructor(props?: yReqIF) {
-//         if(props) {
-//             this.reqif = props['reqif'];
-//             this.index = props['index'];
-//         }
+export type yIndex = {[key: string]: any};
 
+//--------------------
 
-//     }
-// }
+export class yReqIF {
+    reqif: ReqIF;
+    index?: yIndex;
+
+    constructor(props?: yReqIF) {
+        if(props) {
+            this.reqif = props['reqif'];
+            this.index = props['index'];
+        } else {
+            this.reqif = new ReqIF();
+        }
+    }
+}

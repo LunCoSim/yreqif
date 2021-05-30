@@ -50,7 +50,7 @@ export class  DatatypeDefinitionSimple extends DatatypeDefinition {
     }
 }
 
-export class  AttributeDefinitionSimple extends AttributeDefinition {
+export class AttributeDefinitionSimple extends AttributeDefinition {
     // definition?: AttributeValueSimple;
     // owningDefinition?: AttributeValueSimple;
 
@@ -261,7 +261,7 @@ export class  DatatypeDefinitionString extends DatatypeDefinitionSimple {
     }
 }
 
-export class  AttributeDefinitionString extends AttributeDefinitionSimple {
+export class AttributeDefinitionString extends AttributeDefinitionSimple {
     definition?: AttributeValueString;
     owningDefinition?: AttributeValueString;
 

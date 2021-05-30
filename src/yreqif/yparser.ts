@@ -10,15 +10,18 @@ import { yReqIF, yIndex } from "./yreqif";
 import { ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
 import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
 
+//Global definitions
+
+//TODO: Instead of global index create new for this exact file
+let INDEX: yIndex = {};
+
 //-------------------------------------
 
 export function yparse(xml: string) {
     //parsing source
-    const parsed_xml = fast_xml_parse(xml, {
+    return fast_xml_parse(xml, {
         ignoreAttributes : false,
     });
-
-    return parsed_xml;
 }
 
 //----------------------
@@ -31,47 +34,12 @@ export function getFirstElement<Type>(data: any [] | void) {
 }
 
 //---------------------
-//@param Type: 
-//
+//Defining helping functions for extractors
 
-//TODO: Instead of global index create new for this exact file
-let INDEX: yIndex = {};
-
-export function extractProps(classProto: any, data: any): unknown {
-    //------Excluding the highest parent
-    if(!classProto) {
-        return;
-    }
-
-    if((Object.getPrototypeOf(classProto) == null) || (Object.getPrototypeOf(classProto) == undefined)) {
-        return;
-    }
-
-    if(classProto['name'] == "") {
-        return;
-    }
-    //------Finish: Excluding the highest parent
-
-    var res = extractProps(Object.getPrototypeOf(classProto), data);
-
-    Object.keys(classProto).forEach(key => console.log("", key));
-
+function applyExtractingFunction(classProto:any, data: any) {
     var extractingFunction = ExtractingFunctionsMap[classProto.name];
-
-    if(extractingFunction != undefined) {
-        var extracted = extractingFunction(data);
-        
-        res = Object.assign({}, res, extracted);
-    } else {
-        console.error("Extraction function not found for: ", classProto.name)
-    }
-    return res;
-}
-
-function extractRef(source: any) {
-    let firstClassName: string = Object.keys(source)[0]; 
-    if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
-        return [INDEX[source[firstClassName]]];
+    if(extractingFunction) {
+        return extractingFunction(data);
     }
 }
 
@@ -87,6 +55,44 @@ function makeMappedClass(className: string, data?: unknown): any {
         var temp = new mappedClass(extractProps(XMLMap[className], data));
         addToIndex(temp)
         return temp;
+    }
+}
+
+//---------------------
+//Defining extracting functions
+
+export function extractProps(classProto: any, data: any): unknown {
+    //Defining exit conditions when function should exit
+    if(!classProto) {
+        return;
+    }
+
+    if((Object.getPrototypeOf(classProto) == null) || (Object.getPrototypeOf(classProto) == undefined)) {
+        return;
+    }
+
+    if(classProto['name'] == "") {
+        return;
+    }
+    
+    //------
+
+    //Recursively extracting values from it's ancestors
+    var parentsProps = extractProps(Object.getPrototypeOf(classProto), data);
+    
+    var extractedProps = applyExtractingFunction(classProto, data);
+
+    if(!extractedProps) {        
+        console.error("Extraction function not found for: ", classProto.name)
+    }
+
+    return Object.assign({}, parentsProps, extractedProps);
+}
+
+function extractRef(source: any) {
+    let firstClassName: string = Object.keys(source)[0]; 
+    if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
+        return [INDEX[source[firstClassName]]];
     }
 }
 
@@ -111,7 +117,6 @@ export function extractData(source: any): any[] | void {
     }
 }
 
-
 export function extract(data: unknown) {
     INDEX = {};
 
@@ -120,7 +125,7 @@ export function extract(data: unknown) {
         index: INDEX
     });
     
-    INDEX = {};//As INDEX is global, cleaning it
+    INDEX = {};//Resetting index as is global, cleaning it
 
     return res;
 }

@@ -103,8 +103,8 @@ export function extractData(source: any): any[] | void {
         if(refClass) { //checking for ref types!
             return refClass;
         } else {
-            var res = Object.keys(source).map(function(className: string) {
-                return ToArray(source[className]).map((data) => {
+            var res = Object.keys(source).map(function(className: string) {//iterating over all objects in xml
+                return ToArray(source[className]).map((data) => { //iterating over all values including arrays
                     var mappedClass = makeMappedClass(className, data);
                     if(!mappedClass) {
                         console.error('***************** Class not found: ', className)

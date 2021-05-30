@@ -21,34 +21,34 @@ export class yReqIF {
         }
     };
 
-    //---------------------
-    //CRUD operations
-    //Assuming that all edits are subclasses of identifiable
-    create<T extends Identifiable>(props: T) {
-        /*TODO:
-        how to implement different create rules for different classes?
-        */
-    }
+    // //---------------------
+    // //CRUD operations
+    // //Assuming that all edits are subclasses of identifiable
+    // create<T extends Identifiable>(props: T) {
+    //     /*TODO:
+    //     how to implement different create rules for different classes?
+    //     */
+    // }
 
-    read(identifier: string) {
-        if(this.index) {
-            return this.index[identifier];
-        } else {
-            console.error("Missing item in index, identifier: ", identifier);
-        }
-    }
+    // read(identifier: string) {
+    //     if(this.index) {
+    //         return this.index[identifier];
+    //     } else {
+    //         console.error("Missing item in index, identifier: ", identifier);
+    //     }
+    // }
     
-    update(props: Identifiable) {
-        /*TODO:
-        how to implement different update rules for different classes?
-        */
-    }
+    // update(props: Identifiable) {
+    //     /*TODO:
+    //     how to implement different update rules for different classes?
+    //     */
+    // }
 
-    delete(identifier: string | Identifiable) {
-        /*TODO:
-        how to implement different delete rules for different classes?
-        */
-    }
+    // delete(identifier: string | Identifiable) {
+    //     /*TODO:
+    //     how to implement different delete rules for different classes?
+    //     */
+    // }
 }
 
 

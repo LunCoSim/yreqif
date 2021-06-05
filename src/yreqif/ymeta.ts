@@ -39,13 +39,16 @@ export const SpecTypes: any[] = [//TODO: Find something better then any
 Elements with attributs, subclasses of SpecElementWithAttributes
 ----------------------------------------------------------------------------*/
 import { RelationGroup } from "../reqif-naive/content/ReqIFRelationGroup";
-import { Specification } from "../reqif-naive/content/ReqIFSpecification";
+import { SpecHierarchy, 
+    Specification 
+} from "../reqif-naive/content/ReqIFSpecification";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
 import { SpecRelation } from "../reqif-naive/content/ReqIFSpecRelation";
 
 export const ElementsWithAttributes: any[] = [//TODO: Find something better then any
     RelationGroup,
     Specification,
+    SpecHierarchy,
     SpecObject,
     SpecRelation,
 ];

@@ -2,15 +2,16 @@ import { SpecElementWithAttributes } from "./ReqIFSpecElementWithAttributes";
 import { RelationGroup } from "./ReqIFRelationGroup";
 import { SpecRelationType } from "../definitions/ReqIFSpecTypes";
 
-export interface  SpecRelation extends SpecElementWithAttributes {
-    type: SpecRelationType;
-    specRelations: RelationGroup[];
+export class SpecRelation extends SpecElementWithAttributes {
+    type?: SpecRelationType;
+    specRelations?: RelationGroup[];
 
-    // constructor() {
-    //     super();
-
-    //     this.type = new SpecRelationType();
-    //     this.specRelations = [];        
-    // }
+    constructor(props?:SpecRelation) {
+        super(props);
+        if(props) {
+            this.type = props['type'];
+            this.specRelations = props['specRelations'];
+        }
+    }
 }
 

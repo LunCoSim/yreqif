@@ -1,11 +1,7 @@
-//SpecElementWithAttributes
-
-
 /*----------------------------------------------------------------------------
-All children of DataType
+All subclasses of DataType
 ----------------------------------------------------------------------------*/
-import { DatatypeDefinition, 
-    DatatypeDefinitionBoolean, 
+import { DatatypeDefinitionBoolean, 
     DatatypeDefinitionDate, 
     DatatypeDefinitionEnumeration, 
     DatatypeDefinitionInteger, 
@@ -23,13 +19,12 @@ export const DataTypes: any[] = [//TODO: Find something better then any
     DatatypeDefinitionString,
 ];
 
-/*----------------------------------------------------------------------------
-All children of SpecType
+/*---------------------------------------------------------------------------
+All subclasses of SpecType
 ----------------------------------------------------------------------------*/
 import { SpecificationType, 
     SpecObjectType, 
     SpecRelationType, 
-    SpecType,
     RelationGroupType
 } from "../reqif-naive/content/ReqIFSpecTypes";
 
@@ -39,7 +34,3 @@ export const SpecTypes: any[] = [//TODO: Find something better then any
     SpecRelationType,
     RelationGroupType,
 ];
-
-/*----------------------------------------------------------------------------
-All children of SpecType
-----------------------------------------------------------------------------*/

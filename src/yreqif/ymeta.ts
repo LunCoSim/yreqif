@@ -7,7 +7,7 @@ import { DatatypeDefinitionBoolean,
     DatatypeDefinitionInteger, 
     DatatypeDefinitionReal, 
     DatatypeDefinitionString, 
-    DatatypeDefinitionXHTML } from "../reqif-naive/definitions/ReqIFDefinition";
+    DatatypeDefinitionXHTML } from "../reqif-naive/definitions/ReqIFDatatypeDefinition";
 
 export const DataTypes: any[] = [//TODO: Find something better then any
     DatatypeDefinitionXHTML,
@@ -26,7 +26,7 @@ import { SpecificationType,
     SpecObjectType, 
     SpecRelationType, 
     RelationGroupType
-} from "../reqif-naive/content/ReqIFSpecTypes";
+} from "../reqif-naive/definitions/ReqIFSpecTypes";
 
 export const SpecTypes: any[] = [//TODO: Find something better then any
     SpecificationType,
@@ -34,3 +34,8 @@ export const SpecTypes: any[] = [//TODO: Find something better then any
     SpecRelationType,
     RelationGroupType,
 ];
+
+/*---------------------------------------------------------------------------
+Attributes
+----------------------------------------------------------------------------*/
+

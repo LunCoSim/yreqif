@@ -1,15 +1,39 @@
-import { AccessControlledElement, Identifiable, SpecElementWithAttributes } from "../reqif-naive/definitions/ReqIFBasicClasses";
-import { AttributeDefinition, AttributeDefinitionInteger, AttributeDefinitionSimple, AttributeValue, AttributeValueInteger, AttributeValueSimple, DatatypeDefinition, DatatypeDefinitionEnumeration, DatatypeDefinitionInteger, DatatypeDefinitionSimple, DatatypeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition";
-import { SpecificationType, SpecObjectType, SpecRelationType, SpecType } from "../reqif-naive/content/ReqIFSpecTypes";
+import { AccessControlledElement, 
+    Identifiable
+} from "../reqif-naive/definitions/ReqIFBasicClasses";
+import { AttributeValue, 
+    AttributeValueInteger, 
+    AttributeValueSimple, 
+} from "../reqif-naive/definitions/ReqIFAttributeValue";
+import { AttributeDefinition, 
+    AttributeDefinitionInteger, 
+    AttributeDefinitionSimple, 
+    AttributeDefinitionString, 
+    SpecificationType, 
+    SpecObjectType, 
+    SpecRelationType, 
+    SpecType 
+} from "../reqif-naive/definitions/ReqIFSpecTypes";
+import { DatatypeDefinition, 
+    DatatypeDefinitionEnumeration, 
+    DatatypeDefinitionInteger, 
+    DatatypeDefinitionSimple, 
+    DatatypeDefinitionString 
+} from "../reqif-naive/definitions/ReqIFDatatypeDefinition";
 import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject";
-import { SpecHierarchy, Specification } from "../reqif-naive/content/ReqIFSpecification";
-import { AttributeDefinitionString } from "../reqif-naive/definitions/ReqIFDefinition"; 
-import { AttributeValueString } from "../reqif-naive/definitions/ReqIFDefinition";
+import { SpecHierarchy, 
+    Specification 
+} from "../reqif-naive/content/ReqIFSpecification";
+import { AttributeValueString } from "../reqif-naive/definitions/ReqIFAttributeValue";
 import { ReqIFHeader } from "../reqif-naive/ReqIFHeader";
 import { ReqIFContent } from "../reqif-naive/ReqIFContent";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
-import { extractData, getFirstElement } from "./yparser";
+import { extractData, 
+    getFirstElement 
+} from "./yparser";
+import { SpecElementWithAttributes } from "../reqif-naive/content/ReqIFSpecElementWithAttributes";
+
 
 /*
 ------------------------------------------------------------------------------

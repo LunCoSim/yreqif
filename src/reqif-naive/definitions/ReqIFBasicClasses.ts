@@ -3,8 +3,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { AttributeValue } from "./ReqIFDefinition";
-
 //TODO How to connect Identifiable and AlternativeID???? check page 29 figure 10.2 from ReqIF spec
 export class Identifiable {
     desc?: string; //[0..1]
@@ -43,20 +41,6 @@ export class AccessControlledElement extends Identifiable {
         super(props);
         if(props) {
             this.isEditable = props['isEditable'];
-        }
-    }
-}
-
-//-------------------------------------------------------
-//SpecElementWithAttributes
-
-export class SpecElementWithAttributes extends Identifiable {
-    values?: AttributeValue[]
-
-    constructor(props?:SpecElementWithAttributes) {
-        super(props);
-        if(props) {
-            this.values = props['values'];
         }
     }
 }

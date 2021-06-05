@@ -1,18 +1,15 @@
 import { SpecType } from "../content/ReqIFSpecTypes";
-import { AccessControlledElement, Identifiable, SpecElementWithAttributes } from "./ReqIFBasicClasses";
+import { AccessControlledElement, Identifiable } from "./ReqIFBasicClasses";
 
-/*
-------------------------------------------------------------------------------
+/*---------------------------------------------------------------------------
 Basic abstract interface es
-------------------------------------------------------------------------------
-*/
+----------------------------------------------------------------------------*/
 
 export class  DatatypeDefinition extends Identifiable {
     constructor(props?: DatatypeDefinition) {
         super(props);
     }
 }
-
 
 export class AttributeDefinition extends AccessControlledElement {
     type?: SpecType;
@@ -24,7 +21,6 @@ export class AttributeDefinition extends AccessControlledElement {
         }
     }
 }
-
 
 export class AttributeValue {
     // specElAt?: SpecElementWithAttributes[];
@@ -78,13 +74,13 @@ Types definition
 //-----------
 //XHTML
 
-export class  DatatypeDefinitionXHTML extends DatatypeDefinition {
+export class DatatypeDefinitionXHTML extends DatatypeDefinition {
     constructor(props?: DatatypeDefinitionXHTML) {
         super(props);
     }
 }
 
-export interface  AttributeDefinitionXHTML extends AttributeDefinition {
+export interface AttributeDefinitionXHTML extends AttributeDefinition {
     definition: AttributeValueXHTML;
     owningDefinition?: AttributeValueXHTML;
 
@@ -94,7 +90,7 @@ export interface  AttributeDefinitionXHTML extends AttributeDefinition {
     // }
 }
 
-export interface  AttributeValueXHTML extends AttributeValue {
+export interface AttributeValueXHTML extends AttributeValue {
     isSimplified: boolean;
     defaultValue?: AttributeDefinitionXHTML;
 
@@ -109,13 +105,13 @@ export interface  XhtmlContent {
 //-----------
 //Enumeration
 
-export class  DatatypeDefinitionEnumeration extends DatatypeDefinition {
+export class DatatypeDefinitionEnumeration extends DatatypeDefinition {
     constructor(props?: DatatypeDefinitionEnumeration) {
         super(props);
     }
 }
 
-export interface  AttributeDefinitionEnumeration extends AttributeDefinition {
+export interface AttributeDefinitionEnumeration extends AttributeDefinition {
     multiValued?: boolean//Dafult false
     
     definition: AttributeValueEnumeration;
@@ -148,12 +144,12 @@ export class  DatatypeDefinitionBoolean extends DatatypeDefinitionSimple {
     }
 }
 
-export interface  AttributeDefinitionBoolean extends AttributeDefinitionSimple {
+export interface AttributeDefinitionBoolean extends AttributeDefinitionSimple {
     definition: AttributeValueBoolean;
     owningDefinition?: AttributeValueBoolean;
 }
 
-export interface  AttributeValueBoolean extends AttributeValueSimple {
+export interface AttributeValueBoolean extends AttributeValueSimple {
     theValue: boolean;
     defaultValue?: AttributeDefinitionBoolean;
 }
@@ -251,7 +247,7 @@ export interface  AttributeValueReal extends AttributeValueSimple {
 //---------
 //String
 
-export class  DatatypeDefinitionString extends DatatypeDefinitionSimple {
+export class DatatypeDefinitionString extends DatatypeDefinitionSimple {
     maxLength?: number; //should be int
     constructor(props?: DatatypeDefinitionString) {
         super(props);

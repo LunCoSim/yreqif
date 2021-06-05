@@ -51,8 +51,15 @@ export class  SpecRelationType extends SpecType {
     }
 }
 
-export interface  RelationGroupType extends SpecType {
-    relationGroup: RelationGroup[];
+export class  RelationGroupType extends SpecType {
+    relationGroup?: RelationGroup[];
+
+    constructor(props?: RelationGroupType) {
+        super(props);
+        if(props) {
+            this.relationGroup = props['relationGroup'];
+        }
+    }
 
     // constructor() {
     //     super();

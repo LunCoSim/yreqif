@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------
 Abstract interface es
 ----------------------------------------------------------------------------*/
-import { Identifiable } from "./ReqIFBasicClasses";
+import { Identifiable } from "../basic/ReqIFBasicClasses";
 
 export class  DatatypeDefinition extends Identifiable {
     constructor(props?: DatatypeDefinition) {

@@ -1,4 +1,4 @@
-import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
+import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
 //--------------------
@@ -16,7 +16,7 @@ export interface IyReqIF {
 export class yReqIF implements IyReqIF {
     reqif: ReqIF; //Plain ReqIF orbject
     index?: yIndex; //Indexed property that contains links to all identifiable objects
-    
+
     constructor(props?: IyReqIF) {
         if(props) {
             this.reqif = props['reqif'];

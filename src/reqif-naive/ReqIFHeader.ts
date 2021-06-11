@@ -1,4 +1,4 @@
-import { Identifiable } from "./definitions/ReqIFBasicClasses";
+import { Identifiable } from "./basic/ReqIFBasicClasses";
 
 export class ReqIFHeader extends Identifiable {
     comment?: string; //[0..1]

@@ -2,7 +2,7 @@
 //SpecElementWithAttributes
 
 import { AttributeValue } from "../definitions/ReqIFAttributeValue";
-import { Identifiable } from "../definitions/ReqIFBasicClasses";
+import { Identifiable } from "./ReqIFBasicClasses";
 
 export class SpecElementWithAttributes extends Identifiable {
     values?: AttributeValue[]

@@ -1,6 +1,6 @@
 import { AccessControlledElement, 
     Identifiable
-} from "../reqif-naive/definitions/ReqIFBasicClasses";
+} from "../reqif-naive/basic/ReqIFBasicClasses";
 import { AttributeValue, 
     AttributeValueInteger, 
     AttributeValueSimple, 
@@ -32,7 +32,7 @@ import { ReqIF } from "../reqif-naive/ReqIF";
 import { extractData, 
     getFirstElement 
 } from "./yparser";
-import { SpecElementWithAttributes } from "../reqif-naive/content/ReqIFSpecElementWithAttributes";
+import { SpecElementWithAttributes } from "../reqif-naive/basic/ReqIFSpecElementWithAttributes";
 
 
 /*

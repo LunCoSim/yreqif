@@ -1,4 +1,4 @@
-import { SpecElementWithAttributes } from "./ReqIFSpecElementWithAttributes";
+import { SpecElementWithAttributes } from "../basic/ReqIFSpecElementWithAttributes";
 import { RelationGroup } from "./ReqIFRelationGroup";
 import { SpecRelationType } from "../definitions/ReqIFSpecTypes";
 

@@ -8,7 +8,7 @@ import { ReqIF } from "../reqif-naive/ReqIF";
 
 import { yReqIF, yIndex } from "./yreqif";
 import { ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
-import { Identifiable } from "../reqif-naive/definitions/ReqIFBasicClasses";
+import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 
 //Global definitions
 

@@ -1,4 +1,4 @@
-import { Identifiable, AccessControlledElement } from "./ReqIFBasicClasses";
+import { Identifiable, AccessControlledElement } from "../basic/ReqIFBasicClasses";
 import { RelationGroup } from "../content/ReqIFRelationGroup";
 import { Specification } from "../content/ReqIFSpecification";
 import { SpecObject } from "../content/ReqIFSpecObject";

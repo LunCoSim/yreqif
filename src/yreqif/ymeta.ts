@@ -1,13 +1,15 @@
 /*----------------------------------------------------------------------------
 All subclasses of DataType
 ----------------------------------------------------------------------------*/
-import { DatatypeDefinitionBoolean, 
+import { 
+    DatatypeDefinitionBoolean, 
     DatatypeDefinitionDate, 
     DatatypeDefinitionEnumeration, 
     DatatypeDefinitionInteger, 
     DatatypeDefinitionReal, 
     DatatypeDefinitionString, 
-    DatatypeDefinitionXHTML } from "../reqif-naive/definitions/ReqIFDatatypeDefinition";
+    DatatypeDefinitionXHTML 
+} from "../reqif-naive/definitions/ReqIFDatatypeDefinition";
 
 export const DataTypes: any[] = [//TODO: Find something better then any
     DatatypeDefinitionXHTML,
@@ -20,7 +22,7 @@ export const DataTypes: any[] = [//TODO: Find something better then any
 ];
 
 /*---------------------------------------------------------------------------
-Attribute definitions, subclasses of AccessControlElements
+Attrabute values
 ----------------------------------------------------------------------------*/
 
 import {
@@ -36,7 +38,7 @@ import {
     // AttributeValueEnumeration 
 } from "../reqif-naive/definitions/ReqIFAttributeValue";
 
-export const AttributeDefinitions: any[] = [//TODO: Find something better then any
+export const AttrributeValues: any[] = [//TODO: Find something better then any
     // AttributeValueBoolean, 
     // AttributeValueDate,  
     AttributeValueInteger, 
@@ -48,10 +50,9 @@ export const AttributeDefinitions: any[] = [//TODO: Find something better then a
 ];
 
 /*---------------------------------------------------------------------------
-Attrabute vales
+Attribute definitions, subclasses of AccessControlElements
 ----------------------------------------------------------------------------*/
-
-import { AttributeDefinition, 
+import { 
     // AttributeDefinitionBoolean, 
     // AttributeDefinitionDate, 
     AttributeDefinitionInteger, 
@@ -61,8 +62,7 @@ import { AttributeDefinition,
     // AttributeValueEnumeration 
 } from "../reqif-naive/definitions/ReqIFSpecTypes";
 
-export const AttrributeValues: any[] = [//TODO: Find something better then any
-    AttributeDefinition, 
+export const AttributeDefinitions: any[] = [//TODO: Find something better then any
     // AttributeDefinitionBoolean, 
     // AttributeDefinitionDate, 
     AttributeDefinitionInteger, 
@@ -75,7 +75,8 @@ export const AttrributeValues: any[] = [//TODO: Find something better then any
 /*---------------------------------------------------------------------------
 All subclasses of SpecType
 ----------------------------------------------------------------------------*/
-import { SpecificationType, 
+import { 
+    SpecificationType, 
     SpecObjectType, 
     SpecRelationType, 
     RelationGroupType,
@@ -105,3 +106,15 @@ export const ElementsWithAttributes: any[] = [//TODO: Find something better then
     SpecObject,
     SpecRelation,
 ];
+
+/*---------------------------------------------------------------------------
+Elements with attributs, subclasses of SpecElementWithAttributes
+----------------------------------------------------------------------------*/
+
+export const yMetaObjects = {
+    DataTypes,
+    AttrributeValues,
+    AttributeDefinitions,
+    SpecTypes,
+    ElementsWithAttributes
+}

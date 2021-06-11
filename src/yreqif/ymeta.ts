@@ -25,7 +25,7 @@ All subclasses of SpecType
 import { SpecificationType, 
     SpecObjectType, 
     SpecRelationType, 
-    RelationGroupType
+    RelationGroupType,
 } from "../reqif-naive/definitions/ReqIFSpecTypes";
 
 export const SpecTypes: any[] = [//TODO: Find something better then any
@@ -33,6 +33,27 @@ export const SpecTypes: any[] = [//TODO: Find something better then any
     SpecObjectType,
     SpecRelationType,
     RelationGroupType,
+];
+
+import { AttributeDefinition, 
+    // AttributeDefinitionBoolean, 
+    // AttributeDefinitionDate, 
+    AttributeDefinitionInteger, 
+    // AttributeDefinitionReal, 
+    AttributeDefinitionString, 
+    // AttributeDefinitionXHTML, 
+    // AttributeValueEnumeration 
+} from "../reqif-naive/definitions/ReqIFSpecTypes";
+
+export const AttributeDefinitions: any[] = [//TODO: Find something better then any
+    AttributeDefinition, 
+    // AttributeDefinitionBoolean, 
+    // AttributeDefinitionDate, 
+    AttributeDefinitionInteger, 
+    // AttributeDefinitionReal, 
+    AttributeDefinitionString, 
+    // AttributeDefinitionXHTML, 
+    // AttributeValueEnumeration 
 ];
 
 /*---------------------------------------------------------------------------

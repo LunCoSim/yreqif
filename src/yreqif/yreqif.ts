@@ -6,13 +6,18 @@ import { ReqIF } from "../reqif-naive/ReqIF";
 
 export type yIndex = {[key: string]: any};
 
-//--------------------
-
-export class yReqIF {
+export interface IyReqIF {
     reqif: ReqIF; //Plain ReqIF orbject
     index?: yIndex; //Indexed property that contains links to all identifiable objects
+}
 
-    constructor(props?: yReqIF) {
+//--------------------
+
+export class yReqIF implements IyReqIF {
+    reqif: ReqIF; //Plain ReqIF orbject
+    index?: yIndex; //Indexed property that contains links to all identifiable objects
+    
+    constructor(props?: IyReqIF) {
         if(props) {
             this.reqif = props['reqif'];
             this.index = props['index'];
@@ -20,6 +25,9 @@ export class yReqIF {
             this.reqif = new ReqIF();
         }
     };
+}
+
+export class yReqIFCrud {
 
     // //---------------------
     // //CRUD operations
@@ -38,11 +46,11 @@ export class yReqIF {
     //     }
     // }
     
-    // update(props: Identifiable) {
-    //     /*TODO:
-    //     how to implement different update rules for different classes?
-    //     */
-    // }
+    update(yreqif: yReqIF, props: Identifiable) {
+        /*TODO:
+        how to implement different update rules for different classes?
+        */
+    }
 
     // delete(identifier: string | Identifiable) {
     //     /*TODO:
@@ -68,11 +76,20 @@ CRUD operations
 Additional operations
 5. Visualisations!
 
+At each Identifiable update change it's last-updated field.
+
+
 Classes to work with
-1. ReqIf header
-2. DataType
-3. SpecType
-4. SpecObject
+1. ReqIf header - 
+update header's fields
+2. DataType - 
+    create
+    
+    update
+
+    delete 
+3. SpecType - create/update/delete
+4. SpecObject - create/update/delete. 
 5. Specification
 
 */

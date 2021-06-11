@@ -121,7 +121,7 @@ export function extract(data: unknown) {
     INDEX = {};
 
     let res = new yReqIF({
-        reqif: getFirstElement<ReqIF>(extractData(data)) as ReqIF,
+        reqif: getFirstElement<ReqIF>(extractData(data)) || new ReqIF(),
         index: INDEX
     });
     

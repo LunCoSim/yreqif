@@ -1,11 +1,13 @@
 //TODO: write correct implementation
 
 export class ReqIFToolExtension {
-    extensions?: string[]; //temporary data to prevent linter error. To be removed
+    extensions: string[]; //temporary data to prevent linter error. To be removed
 
-    constructor(props: ReqIFToolExtension) {
+    constructor(props?: ReqIFToolExtension) {
         if(props) {
-            this.extensions = props['extensions'];
+            this.extensions = props['extensions'] || [];
+        } else {
+            this.extensions = [];
         }
     }
 }

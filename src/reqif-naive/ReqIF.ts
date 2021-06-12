@@ -10,17 +10,22 @@ export interface IReqIF {
 }
 
 export class ReqIF implements IReqIF {
-    lang?: string; //[0..1]
-    theHeader?: ReqIFHeader;
-    coreContent?: ReqIFContent
-    toolExtension?: ReqIFToolExtension; 
+    lang: string; //[0..1]
+    theHeader: ReqIFHeader;
+    coreContent: ReqIFContent
+    toolExtension: ReqIFToolExtension; 
 
     constructor(props?: IReqIF) {
         if(props) {
-            this.lang = props['lang'];
-            this.theHeader = props['theHeader'];
-            this.coreContent = props['coreContent'];
-            this.toolExtension = props['toolExtension'];
+            this.lang = props['lang'] || "en";
+            this.theHeader = props['theHeader'] || new ReqIFHeader();
+            this.coreContent = props['coreContent'] || new ReqIFContent();
+            this.toolExtension = props['toolExtension'] || new ReqIFToolExtension();
+        } else {
+            this.lang = "en";
+            this.theHeader = new ReqIFHeader();
+            this.coreContent = new ReqIFContent();
+            this.toolExtension = new ReqIFToolExtension();
         }
     }
 }

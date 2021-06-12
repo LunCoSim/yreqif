@@ -31,7 +31,6 @@ export class yReqIF implements IyReqIF {
         if(this.index) {
             this.index[obj.identifier] = obj;
         }
-        
     }
 
     removeIndex(obj: Identifiable | string) {
@@ -54,8 +53,8 @@ export class yReqIF implements IyReqIF {
     }
     //-------------
     create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(obj: Type) {
-    
         if(obj instanceof DatatypeDefinition) {
+            console.log('Creating dataTypes');
             this.reqif.coreContent?.dataTypes?.push(obj)//
         } else if(obj instanceof SpecType) {
             this.reqif.coreContent?.specTypes?.push(obj)//

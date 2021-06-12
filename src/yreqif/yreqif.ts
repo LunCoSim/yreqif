@@ -8,14 +8,14 @@ export type yIndex = {[key: string]: any};
 
 export interface IyReqIF {
     reqif: ReqIF; //Plain ReqIF orbject
-    index?: yIndex; //Indexed property that contains links to all identifiable objects
+    index: yIndex; //Indexed property that contains links to all identifiable objects
 }
 
 //--------------------
 
 export class yReqIF implements IyReqIF {
     reqif: ReqIF; //Plain ReqIF orbject
-    index?: yIndex; //Indexed property that contains links to all identifiable objects
+    index: yIndex; //Indexed property that contains links to all identifiable objects
 
     constructor(props?: IyReqIF) {
         if(props) {
@@ -23,6 +23,7 @@ export class yReqIF implements IyReqIF {
             this.index = props['index'];
         } else {
             this.reqif = new ReqIF();
+            this.index = {};
         }
     };
 
@@ -48,21 +49,25 @@ export class yReqIF implements IyReqIF {
     }
 
     //-------------
-    create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(props: Type) {
+    to_JSON() {
+        return JSON.stringify(this, null, 4)
+    }
+    //-------------
+    create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(obj: Type) {
     
-        if(props instanceof DatatypeDefinition) {
-            this.reqif.coreContent?.dataTypes?.push(props)//
-        } else if(props instanceof SpecType) {
-            this.reqif.coreContent?.specTypes?.push(props)//
-        } else if(props instanceof Specification) {
-            this.reqif.coreContent?.specifications?.push(props)//
-        } else if(props instanceof SpecObject) {
-            this.reqif.coreContent?.specObjects?.push(props)//
-        } else if(props instanceof SpecHierarchy) {
-            // yreqif.reqif.coreContent?.specTypes?.push(props)//
+        if(obj instanceof DatatypeDefinition) {
+            this.reqif.coreContent?.dataTypes?.push(obj)//
+        } else if(obj instanceof SpecType) {
+            this.reqif.coreContent?.specTypes?.push(obj)//
+        } else if(obj instanceof Specification) {
+            this.reqif.coreContent?.specifications?.push(obj)//
+        } else if(obj instanceof SpecObject) {
+            this.reqif.coreContent?.specObjects?.push(obj)//
+        } else if(obj instanceof SpecHierarchy) {
+            // yreqif.reqif.coreContent?.specTypes?.push(obj)//
         }
         //add to index!
-        this.doIndex(props)
+        this.doIndex(obj)
     } 
 
     update<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy | ReqIFHeader>(obj: Type) {

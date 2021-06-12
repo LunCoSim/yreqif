@@ -25,40 +25,155 @@ export class yReqIF implements IyReqIF {
             this.reqif = new ReqIF();
         }
     };
-}
 
-export class yReqIFCrud {
-
-    // //---------------------
-    // //CRUD operations
-    // //Assuming that all edits are subclasses of identifiable
-    // create<T extends Identifiable>(props: T) {
-    //     /*TODO:
-    //     how to implement different create rules for different classes?
-    //     */
-    // }
-
-    // read(identifier: string) {
-    //     if(this.index) {
-    //         return this.index[identifier];
-    //     } else {
-    //         console.error("Missing item in index, identifier: ", identifier);
-    //     }
-    // }
-    
-    update(yreqif: yReqIF, props: Identifiable) {
-        /*TODO:
-        how to implement different update rules for different classes?
-        */
+    doIndex(obj: Identifiable) {
+        if(this.index) {
+            this.index[obj.identifier] = obj;
+        }
+        
     }
 
-    // delete(identifier: string | Identifiable) {
-    //     /*TODO:
-    //     how to implement different delete rules for different classes?
-    //     */
-    // }
+    removeIndex(obj: Identifiable | string) {
+        if(typeof obj == 'string') {
+            //TODO: Finish
+        } else {
+
+        }
+    }
+
+    getObject(id: string) {
+        if(this.index) {
+            return this.index[id];
+        }
+    }
+
+    //-------------
+    create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(props: Type) {
+    
+        if(props instanceof DatatypeDefinition) {
+            this.reqif.coreContent?.dataTypes?.push(props)//
+        } else if(props instanceof SpecType) {
+            this.reqif.coreContent?.specTypes?.push(props)//
+        } else if(props instanceof Specification) {
+            this.reqif.coreContent?.specifications?.push(props)//
+        } else if(props instanceof SpecObject) {
+            this.reqif.coreContent?.specObjects?.push(props)//
+        } else if(props instanceof SpecHierarchy) {
+            // yreqif.reqif.coreContent?.specTypes?.push(props)//
+        }
+        //add to index!
+        this.doIndex(props)
+    } 
+
+    update<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy | ReqIFHeader>(obj: Type) {
+    
+        // if(props instanceof DatatypeDefinition) {
+        //     this.reqif.coreContent?.dataTypes?.push(props)//
+        // } else if(props instanceof SpecType) {
+        //     this.reqif.coreContent?.specTypes?.push(props)//
+        // } else if(props instanceof Specification) {
+        //     this.reqif.coreContent?.specifications?.push(props)//
+        // } else if(props instanceof SpecObject) {
+        //     this.reqif.coreContent?.specObjects?.push(props)//
+        // } else if(props instanceof SpecHierarchy) {
+        //     // yreqif.reqif.coreContent?.specTypes?.push(props)//
+        // }
+        // //add to index!
+        // this.doIndex(props)
+    } 
+    
+    delete(obj: Identifiable) {
+        //update index!
+        //and proper deletion from different plases
+        this.removeIndex(obj);
+        
+        //TODO:
+        if(obj instanceof DatatypeDefinition) {
+            // this.reqif.coreContent?.dataTypes?.push(props)//
+        } else if(obj instanceof SpecType) {
+            // this.reqif.coreContent?.specTypes?.push(props)//
+        } else if(obj instanceof Specification) {
+            // this.reqif.coreContent?.specifications?.push(props)//
+        } else if(obj instanceof SpecObject) {
+            // this.reqif.coreContent?.specObjects?.push(props)//
+        } else if(obj instanceof SpecHierarchy) {
+            // yreqif.reqif.coreContent?.specTypes?.push(props)//
+        }
+
+    }
 }
 
+//---------------------
+import { DatatypeDefinition } from "../reqif-naive/definitions/ReqIFDatatypeDefinition"
+import { SpecType } from "../reqif-naive/definitions/ReqIFSpecTypes"
+import { Specification, SpecHierarchy } from "../reqif-naive/content/ReqIFSpecification"
+import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject"
+
+import { ReqIFHeader } from "../reqif-naive/ReqIFHeader"
+
+export const yCreate = {
+    DatatypeDefinition,
+    SpecType,
+    Specification,
+    SpecObject,
+    SpecHierarchy,
+}
+
+export const yUpdate = {
+    DatatypeDefinition,
+    SpecType,
+    Specification,
+    SpecObject,
+    SpecHierarchy,
+
+    ReqIFHeader,
+}
+
+export const yDelete = {
+    DatatypeDefinition,
+    SpecType,
+    Specification,
+    SpecObject,
+    SpecHierarchy,
+}
+
+//---------------------
+//CRUD operations
+//Assuming that all edits are subclasses of identifiable
+
+/* 
+    Create:
+        DataType
+        SpecType
+        Specification
+        SpecObject
+        SpecHierarchy
+    Update:
+        DataType
+        SpecType
+        Specification
+        SpecObject
+        SpecHierarchy
+        +
+        Header
+
+        Update could be:
+            Add value
+            Modify value
+            Remove value
+
+            Value could be:
+                Build-in value
+                Value based on specification
+
+
+    Delete:
+        DataType
+        SpecType
+        Specification
+        SpecObject
+        SpecHierarchy
+*/
 
 
 /*

@@ -122,7 +122,13 @@ ExtractingFunctionsMap[SpecObject.name] = (v: any): unknown => {
 
 ExtractingFunctionsMap[SpecHierarchy.name] = (v: any): unknown => {
     return {
-        type: getFirstElement<any>(extractData(v["TYPE"]))
+        object: getFirstElement<any>(extractData(v["OBJECT"])),
+        children: extractData(v["CHILDREN"])
+    //     isTableInternal?: boolean;
+    // object?: SpecObject;
+    // parent?: SpecHierarchy;
+    // children?: SpecHierarchy[]; //ordered
+    // root?: Specification;
     }
 }
 
@@ -254,5 +260,6 @@ export const RefTypes: string[] = [
     "SPEC-OBJECT-TYPE-REF",
     "DATATYPE-DEFINITION-INTEGER-REF",
     "ATTRIBUTE-DEFINITION-STRING-REF",
-    "ATTRIBUTE-DEFINITION-INTEGER-REF"
+    "ATTRIBUTE-DEFINITION-INTEGER-REF",
+    "SPEC-OBJECT-REF"
 ]

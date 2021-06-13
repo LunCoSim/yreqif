@@ -49,7 +49,7 @@ export class yReqIF implements IyReqIF {
 
     //-------------
     to_JSON() {
-        return JSON.stringify(this, null, 4)
+        return JSON.stringify(this.reqif, null, 4)
     }
     //-------------
     create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(obj: Type) {
@@ -91,7 +91,8 @@ export class yReqIF implements IyReqIF {
         //and proper deletion from different plases
         this.removeIndex(obj);
         
-        //TODO:
+        //TODO:implement simple remove
+        //What to do with cyclic changes when removes datatype that is used?
         if(obj instanceof DatatypeDefinition) {
             // this.reqif.coreContent?.dataTypes?.push(props)//
         } else if(obj instanceof SpecType) {

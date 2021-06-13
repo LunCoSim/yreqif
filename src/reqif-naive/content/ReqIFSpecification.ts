@@ -27,8 +27,8 @@ export class SpecHierarchy extends SpecElementWithAttributes {
     isTableInternal?: boolean;
     object?: SpecObject;
     parent?: SpecHierarchy;
-    children?: Specification[]; //ordered
-    specObjects?: SpecObject[];
+    children?: SpecHierarchy[]; //ordered
+    root?: Specification;
 
     constructor(props?:SpecHierarchy) {
         super(props);
@@ -37,7 +37,7 @@ export class SpecHierarchy extends SpecElementWithAttributes {
             this.object = props['object']; 
             this.parent = props['parent'];
             this.children = props['children'];
-            this.specObjects = props['specObjects'];
+            this.root = props['root'];
         }
     }
 }

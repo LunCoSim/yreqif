@@ -92,7 +92,7 @@ export function extractProps(classProto: any, data: any): unknown {
 function extractRef(source: any) {
     let firstClassName: string = Object.keys(source)[0]; 
     if(RefTypes.indexOf(firstClassName) != -1) { //checking for ref types!
-        return [INDEX[source[firstClassName]]];
+        return [source[firstClassName]];
     }
 }
 

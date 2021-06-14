@@ -1,6 +1,16 @@
 import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
+import { canUpdate, canDelete } from "./yvalidation_rules";
+
+//---------------------
+import { DatatypeDefinition } from "../reqif-naive/definitions/ReqIFDatatypeDefinition"
+import { SpecType } from "../reqif-naive/definitions/ReqIFSpecTypes"
+import { Specification, SpecHierarchy } from "../reqif-naive/content/ReqIFSpecification"
+import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject"
+
+import { ReqIFHeader } from "../reqif-naive/ReqIFHeader"
+
 //--------------------
 //Types and other usefull things
 
@@ -55,13 +65,13 @@ export class yReqIF implements IyReqIF {
     create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(obj: Type) {
         if(obj instanceof DatatypeDefinition) {
             console.log('Creating dataTypes');
-            this.reqif.coreContent?.dataTypes?.push(obj)//
+            this.reqif.coreContent.dataTypes.push(obj)//
         } else if(obj instanceof SpecType) {
-            this.reqif.coreContent?.specTypes?.push(obj)//
+            this.reqif.coreContent.specTypes.push(obj)//
         } else if(obj instanceof Specification) {
-            this.reqif.coreContent?.specifications?.push(obj)//
+            this.reqif.coreContent.specifications.push(obj)//
         } else if(obj instanceof SpecObject) {
-            this.reqif.coreContent?.specObjects?.push(obj)//
+            this.reqif.coreContent.specObjects.push(obj)//
         } else if(obj instanceof SpecHierarchy) {
             // yreqif.reqif.coreContent?.specTypes?.push(obj)//
         }
@@ -69,8 +79,13 @@ export class yReqIF implements IyReqIF {
         this.doIndex(obj)
     } 
 
-    update<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy | ReqIFHeader>(obj: Type) {
-    
+    update(obj: Identifiable) {
+        if(canUpdate(this, obj)) {
+            this.force_update(obj);
+        }
+    } 
+
+    force_update(obj: Identifiable) {
         // if(props instanceof DatatypeDefinition) {
         //     this.reqif.coreContent?.dataTypes?.push(props)//
         // } else if(props instanceof SpecType) {
@@ -84,9 +99,18 @@ export class yReqIF implements IyReqIF {
         // }
         // //add to index!
         // this.doIndex(props)
-    } 
+    }
     
     delete(obj: Identifiable) {
+        if(canDelete(this, obj)) {
+            this.force_delete(obj);
+        }
+    }
+
+    force_delete(obj: Identifiable) {
+        function doFilter(id: Identifiable) {
+            return id.identifier != obj.identifier;
+        }
         //update index!
         //and proper deletion from different plases
         this.removeIndex(obj);
@@ -94,27 +118,23 @@ export class yReqIF implements IyReqIF {
         //TODO:implement simple remove
         //What to do with cyclic changes when removes datatype that is used?
         if(obj instanceof DatatypeDefinition) {
-            // this.reqif.coreContent?.dataTypes?.push(props)//
+            this.reqif.coreContent.dataTypes = this.reqif.coreContent.dataTypes.filter(doFilter);
         } else if(obj instanceof SpecType) {
-            // this.reqif.coreContent?.specTypes?.push(props)//
+            this.reqif.coreContent.specTypes = this.reqif.coreContent.specTypes.filter(doFilter);
         } else if(obj instanceof Specification) {
-            // this.reqif.coreContent?.specifications?.push(props)//
+            this.reqif.coreContent.specifications = this.reqif.coreContent.specifications.filter(doFilter);
         } else if(obj instanceof SpecObject) {
-            // this.reqif.coreContent?.specObjects?.push(props)//
+            this.reqif.coreContent.specObjects = this.reqif.coreContent.specObjects.filter(doFilter);
         } else if(obj instanceof SpecHierarchy) {
-            // yreqif.reqif.coreContent?.specTypes?.push(props)//
+            this.reqif.coreContent.specTypes = this.reqif.coreContent.specTypes.filter(doFilter);
+        } else {
+            console.error('Trying to delete unknown object!')
+            throw "Can't delete object of type: " + obj.constructor.name;
         }
-
     }
 }
 
-//---------------------
-import { DatatypeDefinition } from "../reqif-naive/definitions/ReqIFDatatypeDefinition"
-import { SpecType } from "../reqif-naive/definitions/ReqIFSpecTypes"
-import { Specification, SpecHierarchy } from "../reqif-naive/content/ReqIFSpecification"
-import { SpecObject } from "../reqif-naive/content/ReqIFSpecObject"
-
-import { ReqIFHeader } from "../reqif-naive/ReqIFHeader"
+//--------------------
 
 export const yCreate = {
     DatatypeDefinition,

@@ -15,28 +15,28 @@ export interface IReqIFContent {
 }
 
 export class ReqIFContent {
-    dataTypes?: DatatypeDefinition[];
-    specTypes?: SpecType[];
-    specObjects?: SpecObject[];
-    specRelations?: SpecRelation[];
-    specifications?: Specification[];
-    specRelationsGroup?: RelationGroup[];
+    dataTypes: DatatypeDefinition[];
+    specTypes: SpecType[];
+    specObjects: SpecObject[];
+    specRelations: SpecRelation[];
+    specifications: Specification[];
+    specRelationsGroup: RelationGroup[];
 
-    constructor(props?: ReqIFContent) {
+    constructor(props?: IReqIFContent) {
         if(props) {
-            this.dataTypes = props["dataTypes"];
-            this.specTypes = props["specTypes"];
-            this.specObjects = props["specObjects"];
-            this.specRelations = props["specRelations"];
-            this.specifications = props["specifications"];
-            this.specRelationsGroup = props["specRelationsGroup"];
+            this.dataTypes = props["dataTypes"] || [];
+            this.specTypes = props["specTypes"] || [];
+            this.specObjects = props["specObjects"] || [];
+            this.specRelations = props["specRelations"] || [];
+            this.specifications = props["specifications"] || [];
+            this.specRelationsGroup = props["specRelationsGroup"] || [];
+        } else {
+            this.dataTypes = [];
+            this.specTypes = [];
+            this.specObjects = [];
+            this.specRelations = [];
+            this.specifications = [];
+            this.specRelationsGroup = [];
         }
-
-        this.dataTypes = this.dataTypes || [];
-        this.specTypes = this.specTypes || [];
-        this.specObjects = this.specObjects || [];
-        this.specRelations = this.specRelations || [];
-        this.specifications = this.specifications || [];
-        this.specRelationsGroup = this.specRelationsGroup || [];
     }
 }

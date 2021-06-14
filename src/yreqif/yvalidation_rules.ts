@@ -13,6 +13,11 @@ function ruleIdenifierCantBeEmpty(obj:Identifiable) {
     return true;
 }
 
+//------------------------------------------------------------
+export function canCreate(yreqif: yReqIF, action: any): boolean {
+    return true;
+}
+
 export function canDelete(yreqif: yReqIF, action: any): boolean {
     //TODO: Rule that can't delete header!
 

@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import { IIdentifiable, Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
-import { canUpdate, canDelete } from "./yvalidation_rules";
+import { canUpdate, canDelete, canCreate } from "./yvalidation_rules";
 
 //---------------------
 import { DatatypeDefinition } from "../reqif-naive/definitions/ReqIFDatatypeDefinition"
@@ -72,25 +72,33 @@ export class yReqIF implements IyReqIF {
     }
     //-------------
     create<Type extends DatatypeDefinition | SpecType | Specification | SpecObject | SpecHierarchy>(obj: Type) {
-        if(obj instanceof DatatypeDefinition) {
-            console.log('Creating dataTypes');
-            this.reqif.coreContent.dataTypes.push(obj)//
-        } else if(obj instanceof SpecType) {
-            this.reqif.coreContent.specTypes.push(obj)//
-        } else if(obj instanceof Specification) {
-            this.reqif.coreContent.specifications.push(obj)//
-        } else if(obj instanceof SpecObject) {
-            this.reqif.coreContent.specObjects.push(obj)//
-        } else if(obj instanceof SpecHierarchy) {
-            // yreqif.reqif.coreContent?.specTypes?.push(obj)//
+        if(canCreate(this, obj)) {
+            if(obj instanceof DatatypeDefinition) {
+                console.log('Creating dataTypes');
+                this.reqif.coreContent.dataTypes.push(obj)//
+            } else if(obj instanceof SpecType) {
+                this.reqif.coreContent.specTypes.push(obj)//
+            } else if(obj instanceof Specification) {
+                this.reqif.coreContent.specifications.push(obj)//
+            } else if(obj instanceof SpecObject) {
+                this.reqif.coreContent.specObjects.push(obj)//
+            } else if(obj instanceof SpecHierarchy) {
+                //todo: check if has 
+                // yreqif.reqif.coreContent?.specTypes?.push(obj)//
+            }
+            //add to index!
+            this.doIndex(obj)
+        } else {
+            console.error('Not allowed to create object', obj);
         }
-        //add to index!
-        this.doIndex(obj)
+        
     } 
 
     update(obj: IIdentifiable) {
         if(canUpdate(this, obj)) {
             this.force_update(obj);
+        } else {
+            console.error('Not allowed to update object', obj);
         }
     } 
 
@@ -117,7 +125,7 @@ export class yReqIF implements IyReqIF {
         if(canDelete(this, obj)) {
             this.force_delete(obj);
         } else {
-            console.error('Not allowed to delete object')
+            console.error('Not allowed to delete object', obj);
         }
     }
 

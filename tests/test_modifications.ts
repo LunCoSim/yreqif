@@ -19,11 +19,14 @@ yreqif.create(specificationType);
 yreqif.create(specObject);
 yreqif.create(specification);
 
+console.log("Created new objects: ");
 
-function toJSON(obj: object) {
-    return JSON.stringify(obj, null, 4)
-}
-// console.log();
-// console.log(JSON.stringify(specificationType, null, 4));
+console.log(yreqif.to_JSON());
 
+yreqif.delete(dt_integer);
+yreqif.delete(specificationType);
+yreqif.delete(specObject);
+yreqif.delete(specification);
+
+console.log("After deleting: ");
 console.log(yreqif.to_JSON());

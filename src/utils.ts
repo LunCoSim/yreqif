@@ -6,3 +6,7 @@ export function ToArray(obj:unknown) {
         return [obj]
     }
 }
+
+function toJSON(obj: object) {
+    return JSON.stringify(obj, null, 4)
+}

@@ -12,13 +12,15 @@ const yreqif = new yReqIF();
 //Datatype Definitions
 const dt_integer = new DatatypeDefinitionInteger({
     identifier: "basic_integer",
-    longName: "Integer"
+    longName: "Integer",
+    desc: "Default integer type"
 });
 
 const dt_string = new DatatypeDefinitionString({
     identifier: "basic_string",
     longName: "String",
-    maxLength: 10000
+    maxLength: 10000,
+    desc: "Default string type"
 });
 
 //Object types definitions
@@ -75,6 +77,7 @@ console.log(yreqif.to_JSON());
 
 //-----------------------------------------
 //Deleting
+yreqif.delete(yreqif.reqif.theHeader);
 
 yObjects.map((v) => yreqif.delete(v));
 

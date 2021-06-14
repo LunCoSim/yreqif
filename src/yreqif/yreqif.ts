@@ -47,14 +47,14 @@ export class yReqIF implements IyReqIF {
         }
     }
 
-    removeIndex(obj: Identifiable | string) {
+    removeIndex(obj: IIdentifiable | string) {
         let id = ""
 
         if(typeof obj == 'string') {
             //TODO: Finish
             id = obj;
         } else {
-            id = obj.identifier;
+            id = obj.identifier || "";
         }
 
         delete this.index[id];
@@ -113,14 +113,16 @@ export class yReqIF implements IyReqIF {
         // }
     }
     
-    delete(obj: Identifiable) {
+    delete(obj: IIdentifiable) {
         if(canDelete(this, obj)) {
             this.force_delete(obj);
+        } else {
+            console.error('Not allowed to delete object')
         }
     }
 
-    force_delete(obj: Identifiable) {
-        function doFilter(id: Identifiable) {
+    force_delete(obj: IIdentifiable) {
+        function doFilter(id: IIdentifiable) {
             return id.identifier != obj.identifier;
         }
         //update index!

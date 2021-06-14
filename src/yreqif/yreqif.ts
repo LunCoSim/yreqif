@@ -37,6 +37,7 @@ export class yReqIF implements IyReqIF {
         } else {
             this.reqif = new ReqIF();
             this.index = {};
+            this.doIndex(this.reqif.theHeader);
         }
     };
 
@@ -87,7 +88,7 @@ export class yReqIF implements IyReqIF {
         this.doIndex(obj)
     } 
 
-    update(obj: Identifiable) {
+    update(obj: IIdentifiable) {
         if(canUpdate(this, obj)) {
             this.force_update(obj);
         }

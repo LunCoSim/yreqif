@@ -98,9 +98,13 @@ export class  DatatypeDefinitionReal extends DatatypeDefinitionSimple {
 
 //String
 
+export interface IDatatypeDefinitionString extends IDatatypeDefinitionSimple {
+    maxLength?: number; //should be int
+}
+
 export class DatatypeDefinitionString extends DatatypeDefinitionSimple {
     maxLength?: number; //should be int
-    constructor(props?: DatatypeDefinitionString) {
+    constructor(props?: IDatatypeDefinitionString) {
         super(props);
         if(props) {
             this.maxLength = props['maxLength'];

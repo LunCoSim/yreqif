@@ -2,12 +2,16 @@
 //SpecElementWithAttributes
 
 import { AttributeValue } from "../definitions/ReqIFAttributeValue";
-import { Identifiable } from "./ReqIFBasicClasses";
+import { Identifiable, IIdentifiable } from "./ReqIFBasicClasses";
+
+export interface ISpecElementWithAttributes extends IIdentifiable {
+    values?: AttributeValue[]
+}
 
 export class SpecElementWithAttributes extends Identifiable {
-    values?: AttributeValue[]
+    values?: AttributeValue[];
 
-    constructor(props?:SpecElementWithAttributes) {
+    constructor(props?: ISpecElementWithAttributes) {
         super(props);
         if(props) {
             this.values = props['values'];

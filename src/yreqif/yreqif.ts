@@ -1,3 +1,6 @@
+import * as _ from "lodash";
+
+//---------------------
 import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
@@ -44,11 +47,16 @@ export class yReqIF implements IyReqIF {
     }
 
     removeIndex(obj: Identifiable | string) {
+        let id = ""
+
         if(typeof obj == 'string') {
             //TODO: Finish
+            id = obj;
         } else {
-
+            id = obj.identifier;
         }
+
+        delete this.index[id];
     }
 
     getObject(id: string) {
@@ -86,6 +94,9 @@ export class yReqIF implements IyReqIF {
     } 
 
     force_update(obj: Identifiable) {
+        let to: Identifiable = this.index[obj.identifier];
+
+        _.assign(to, obj);
         // if(props instanceof DatatypeDefinition) {
         //     this.reqif.coreContent?.dataTypes?.push(props)//
         // } else if(props instanceof SpecType) {
@@ -97,8 +108,6 @@ export class yReqIF implements IyReqIF {
         // } else if(props instanceof SpecHierarchy) {
         //     // yreqif.reqif.coreContent?.specTypes?.push(props)//
         // }
-        // //add to index!
-        // this.doIndex(props)
     }
     
     delete(obj: Identifiable) {

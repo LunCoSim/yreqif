@@ -8,7 +8,10 @@ import { yReqIF } from "../src/yreqif/yreqif";
 
 const yreqif = new yReqIF();
 
-const dt_integer = new DatatypeDefinitionInteger();
+const dt_integer = new DatatypeDefinitionInteger({
+    longName: "Basic integer"
+});
+
 const specObject = new SpecObject();
 
 const specObjectType = new SpecObjectType();

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 
 //---------------------
-import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
+import { IIdentifiable, Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
 import { canUpdate, canDelete } from "./yvalidation_rules";
@@ -93,10 +93,12 @@ export class yReqIF implements IyReqIF {
         }
     } 
 
-    force_update(obj: Identifiable) {
-        let to: Identifiable = this.index[obj.identifier];
+    force_update(obj: IIdentifiable) {
+        if(obj.identifier) {
+            let to: Identifiable = this.index[obj.identifier];
+            _.assign(to, obj);
+        }
 
-        _.assign(to, obj);
         // if(props instanceof DatatypeDefinition) {
         //     this.reqif.coreContent?.dataTypes?.push(props)//
         // } else if(props instanceof SpecType) {

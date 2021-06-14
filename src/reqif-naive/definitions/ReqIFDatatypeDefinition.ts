@@ -1,16 +1,24 @@
 /*---------------------------------------------------------------------------
 Abstract interface es
 ----------------------------------------------------------------------------*/
-import { Identifiable } from "../basic/ReqIFBasicClasses";
+import { Identifiable, IIdentifiable } from "../basic/ReqIFBasicClasses";
 
-export class  DatatypeDefinition extends Identifiable {
-    constructor(props?: DatatypeDefinition) {
+export interface IDatatypeDefinition extends IIdentifiable {
+
+}
+
+export class DatatypeDefinition extends Identifiable {
+    constructor(props?: IDatatypeDefinition) {
         super(props);
     }
 }
 
-export class  DatatypeDefinitionSimple extends DatatypeDefinition {
-    constructor(props?: DatatypeDefinitionSimple) {
+export interface IDatatypeDefinitionSimple extends IDatatypeDefinition {
+
+}
+
+export class DatatypeDefinitionSimple extends DatatypeDefinition {
+    constructor(props?: IDatatypeDefinitionSimple) {
         super(props);
     }
 }
@@ -53,11 +61,16 @@ export class  DatatypeDefinitionDate extends DatatypeDefinitionSimple {
 
 //Integer
 
+export interface IDatatypeDefinitionInteger extends IDatatypeDefinitionSimple {
+    max?: number; //should be int
+    min?: number; //should be int
+}
+
 export class  DatatypeDefinitionInteger extends DatatypeDefinitionSimple {
     max?: number; //should be int
     min?: number; //should be int
 
-    constructor(props?: DatatypeDefinitionInteger) {
+    constructor(props?: IDatatypeDefinitionInteger) {
         super(props);
         if(props) {
             this.max = props['max'];

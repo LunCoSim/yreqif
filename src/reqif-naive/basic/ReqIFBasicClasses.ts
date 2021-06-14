@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface IIdentifiable {
     desc?: string; //[0..1]
-    identifier: string; //UUID
+    identifier?: string; //UUID
     lastChange?: Date;
     longName?: string; //[0..1];
 

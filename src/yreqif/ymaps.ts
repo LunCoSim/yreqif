@@ -378,7 +378,7 @@ ExportingFunctionsMap[SpecRelationType.name] = (v: SpecRelationType): unknown =>
 
 ExportingFunctionsMap[SpecElementWithAttributes.name] = (v: SpecElementWithAttributes): unknown => {
     return {
-        "VALUES": extractData(v.values)
+        "VALUES": exportData(v.values)
     }
 }
 

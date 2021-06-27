@@ -10,7 +10,8 @@
     "build": "tsc",
     "test": "tsc; node ./dist/tests/test_reqif.js",
     "test1": "tsc; node ./dist/tests/test_modifications.js",
-    "test2": "tsc; node ./dist/tests/test_export.js"
+    "test2": "tsc; node ./dist/tests/test_export.js",
+    "test3": "tsc; node ./dist/tests/test_export_2.js"
   },
   "dependencies": {
     "@types/lodash": "^4.14.170",

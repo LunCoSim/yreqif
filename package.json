@@ -9,12 +9,13 @@
   "scripts": {
     "build": "tsc",
     "test": "tsc; node ./dist/tests/test_reqif.js",
-    "test1": "tsc; node ./dist/tests/test_modifications.js"
+    "test1": "tsc; node ./dist/tests/test_modifications.js",
+    "test2": "tsc; node ./dist/tests/test_export.js"
   },
   "dependencies": {
     "@types/lodash": "^4.14.170",
     "@types/uuid": "^8.3.0",
-    "fast-xml-parser": "^3.19.0",
+    "fast-xml-parser": "ssh://git@github.com:Yarm-requirements-management/fast-xml-parser.git",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   },

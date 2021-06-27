@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import { parse as fast_xml_parse, j2xParser} from "fast-xml-parser";
 
-import { ToArray } from "../utils";
+import { ToArray, toJSON } from "../utils";
 
 import { ReqIF } from "../reqif-naive/ReqIF";
 
@@ -123,26 +123,27 @@ export function exportObj(source: any): any {
     let res = {};
     let s = Object.getPrototypeOf(source);
 
-    while(s.constructor.name != "Object") {
-        if(s.constructor) {
-            if(ExportingFunctionsMap[s.constructor.name]) {
-                res = Object.assign(res, ExportingFunctionsMap[s.constructor.name](source));
-            } else {
-                console.error('Exporting function not found for: ',  s.constructor.name);
+    if(Array.isArray(source)) {
+        res = source.map(exportData);
+    } else {
+        while(s.constructor.name != "Object") {
+            if(s.constructor) {
+                if(ExportingFunctionsMap[s.constructor.name]) {
+                    res = Object.assign(res, ExportingFunctionsMap[s.constructor.name](source));
+                } else {
+                    console.error('Exporting function not found for: ',  s.constructor.name);
+                }
             }
+            
+            s = Object.getPrototypeOf(s);
         }
-        
-        s = Object.getPrototypeOf(s);
     }
+    
     return res;
 }
 
 export function exportData(source: any): Object {
     if(source) {
-        // console.log("*********")
-        // console.log(source);
-        // console.log(source.constructor.name);
-        // console.log(ClassesToXMLMap);
 
         if(ClassesToXMLMap[source.constructor.name]) {
             let t: any = {};
@@ -180,22 +181,17 @@ export function importXML(data: unknown) {
 //--------------------
 
 export function exportXML(yreqif: yReqIF): string {
-    
+
     //default options need not to set
     var defaultOptions = {
-        attributeNamePrefix : "@_",
-        textNodeName : "#text",
         ignoreAttributes : false,
-        cdataTagName: "__cdata", //default is false
-        cdataPositionChar: "\\c",
-        format: false,
-        indentBy: "  ",
-        supressEmptyNode: false,
+        preserveArrays: true
     };
 
     var parser = new j2xParser(defaultOptions);
 
     var xmlRepresentation = prepareXMLRepresentation(yreqif.reqif);
+    // console.log("------ xmlRepresentation:", toJSON(xmlRepresentation));
 
     var preparedXML = {
 

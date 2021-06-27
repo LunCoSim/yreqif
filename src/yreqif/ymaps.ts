@@ -285,10 +285,6 @@ parsed XML data
 
 export let ExportingFunctionsMap: {[key: string]: any} = {};
 
-ExportingFunctionsMap["Array"] = (v: []): unknown => {
-    return v.map(exportData);
-}
-
 ExportingFunctionsMap[AccessControlledElement.name] = (v: AccessControlledElement): unknown => {
     return {
         "IS-EDITABLE": v.isEditable,

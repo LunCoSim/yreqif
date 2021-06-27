@@ -7,7 +7,7 @@ import { ToArray } from "../utils";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
 import { yReqIF, yIndex } from "./yreqif";
-import { ExportingFunctionsMap, ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
+import { ClassesToXMLMap, ExportingFunctionsMap, ExtractingFunctionsMap, RefTypes, XMLToClassesMap } from "./ymaps";
 import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 
 //Global definitions
@@ -50,9 +50,9 @@ function addToIndex(identifiable: any): void {
 }
 
 function makeMappedClass(className: string, data?: unknown): any {
-    var mappedClass = XMLMap[className];
+    var mappedClass = XMLToClassesMap[className];
     if(mappedClass) {
-        var temp = new mappedClass(extractProps(XMLMap[className], data));
+        var temp = new mappedClass(extractProps(XMLToClassesMap[className], data));
         addToIndex(temp)
         return temp;
     }
@@ -139,7 +139,19 @@ export function exportObj(source: any): any {
 
 export function exportData(source: any): Object {
     if(source) {
-        return exportObj(source);
+        // console.log("*********")
+        // console.log(source);
+        // console.log(source.constructor.name);
+        // console.log(ClassesToXMLMap);
+
+        if(ClassesToXMLMap[source.constructor.name]) {
+            let t: any = {};
+            let prop = ClassesToXMLMap[source.constructor.name] as string;
+            t[prop] = exportObj(source);
+            return t;
+        } else {
+            return exportObj(source);
+        }
     }
     console.log("Error exporting: ", source);
     return {};

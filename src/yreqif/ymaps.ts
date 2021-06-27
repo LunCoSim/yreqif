@@ -220,7 +220,7 @@ Mapping classes to values from XML
 ------------------------------------------------------------------------------
 */
 
-export const XMLMap: { [key: string]: any } = {
+export const XMLToClassesMap: { [key: string]: any } = {
     //
     "REQ-IF": ReqIF,
     "REQ-IF-HEADER": ReqIFHeader,
@@ -247,6 +247,18 @@ export const XMLMap: { [key: string]: any } = {
     "ATTRIBUTE-DEFINITION-INTEGER": AttributeDefinitionInteger,
     "ATTRIBUTE-VALUE-INTEGER": AttributeValueInteger,
 }
+
+function invertMapping( mapping: { [key: string]: any }) {
+    let inverted: { [key: string]: string } = {};
+
+    for(let key in mapping) {
+        let val = mapping[key];
+        inverted[val.name] = key;
+    }
+    return inverted;
+}
+
+export const ClassesToXMLMap: { [key: string]: string } = invertMapping(XMLToClassesMap);
 
 /*
 ------------------------------------------------------------------------------
@@ -285,10 +297,8 @@ ExportingFunctionsMap[AccessControlledElement.name] = (v: AccessControlledElemen
 
 ExportingFunctionsMap[ReqIF.name] = (v: ReqIF): Object => {
     return {
-        "REQ-IF": {
-            "THE-HEADER": exportData(v.theHeader),
-            "CORE-CONTENT": exportData(v.coreContent)
-        }
+        "THE-HEADER": exportData(v.theHeader),
+        "CORE-CONTENT": exportData(v.coreContent)
     }
 }
 

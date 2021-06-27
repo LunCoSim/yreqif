@@ -117,7 +117,7 @@ export function extractData(source: any): any[] | void {
     }
 }
 
-export function extract(data: unknown) {
+export function importXML(data: unknown) {
     INDEX = {};
 
     let res = new yReqIF({
@@ -128,4 +128,10 @@ export function extract(data: unknown) {
     INDEX = {};//Resetting index as is global, cleaning it
 
     return res;
+}
+
+//--------------------
+
+export function exportXML(yreqif: yReqIF): string {
+    return "";
 }

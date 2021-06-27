@@ -5,6 +5,8 @@ import { SpecObject } from "../src/reqif-naive/content/ReqIFSpecObject";
 import { DatatypeDefinitionInteger, DatatypeDefinitionString, IDatatypeDefinitionInteger } from "../src/reqif-naive/definitions/ReqIFDatatypeDefinition";
 import { SpecificationType, SpecObjectType } from "../src/reqif-naive/definitions/ReqIFSpecTypes";
 import { IReqIFHeader } from "../src/reqif-naive/ReqIFHeader";
+
+import { yparse, exportXML } from "../src/yreqif/yparser";
 import { yReqIF } from "../src/yreqif/yreqif";
 
 const yreqif = new yReqIF();
@@ -76,7 +78,14 @@ console.log("Created new objects: ");
 console.log(yreqif.to_JSON());
 
 //-----------------------------------------
+//Saving
+
+console.log("Saving: ", exportXML(yreqif));
+
+//-----------------------------------------
 //Deleting
+console.log("Trying to delete theHeader");
+
 yreqif.delete(yreqif.reqif.theHeader);
 
 yObjects.map((v) => yreqif.delete(v));

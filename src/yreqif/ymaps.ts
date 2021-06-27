@@ -29,7 +29,7 @@ import { ReqIFHeader } from "../reqif-naive/ReqIFHeader";
 import { ReqIFContent } from "../reqif-naive/ReqIFContent";
 import { ReqIF } from "../reqif-naive/ReqIF";
 
-import { extractData, 
+import { exportData, extractData, 
     getFirstElement 
 } from "./yparser";
 import { SpecElementWithAttributes } from "../reqif-naive/basic/ReqIFSpecElementWithAttributes";
@@ -263,3 +263,184 @@ export const RefTypes: string[] = [
     "ATTRIBUTE-DEFINITION-INTEGER-REF",
     "SPEC-OBJECT-REF"
 ]
+
+/*
+------------------------------------------------------------------------------
+Defining functions that knows how to extract data for particular class from
+parsed XML data
+------------------------------------------------------------------------------
+*/
+
+export let ExportingFunctionsMap: {[key: string]: any} = {};
+
+ExportingFunctionsMap["Array"] = (v: []): unknown => {
+    return v.map(exportData);
+}
+
+ExportingFunctionsMap[AccessControlledElement.name] = (v: AccessControlledElement): unknown => {
+    return {
+        "IS-EDITABLE": v.isEditable,
+    }
+}
+
+ExportingFunctionsMap[ReqIF.name] = (v: ReqIF): Object => {
+    return {
+        "REQ-IF": {
+            "THE-HEADER": exportData(v.theHeader),
+            "CORE-CONTENT": exportData(v.coreContent)
+        }
+    }
+}
+
+ExportingFunctionsMap[ReqIFHeader.name] = (v: ReqIFHeader): Object => {
+    return {
+        "COMMENT": v.comment,
+        "CREATION-TIME": v.creationTime,
+        "REQ-IF-TOOL-ID": v.reqIFToolId,
+        "REQ-IF-VERSION": v.reqIFVersion,
+        "SOURCE-TOOL-ID": v.sourceToolId,
+        "TITLE": v.title,
+    }
+}
+
+ExportingFunctionsMap[Identifiable.name] = (v: Identifiable): Object => {
+    return {
+        "@_DESC": v.desc,
+        "@_IDENTIFIER": v.identifier,
+        "@_LAST-CHANGED": v.lastChange,
+        "@_LONG-NAME": v.longName,
+    }
+}
+
+ExportingFunctionsMap[ReqIFContent.name] = (v: any): unknown => {
+    return {
+        "DATATYPES": exportData(v.dataTypes),
+        "SPEC-TYPES": exportData(v.specTypes),
+        "SPEC-OBJECTS": exportData(v.specObjects),
+        // specRelations: extractData<SpecRelations[]>(v["SPEC-RELATIONS"]),
+        "SPECIFICATIONS": exportData(v.specifications),
+    }
+}
+
+//---------
+//Datatype defintions
+ExportingFunctionsMap[DatatypeDefinition.name] = (v: DatatypeDefinition): unknown => {
+    return {};
+}
+
+ExportingFunctionsMap[DatatypeDefinitionSimple.name] = (v: DatatypeDefinitionSimple): unknown => {
+    return {};
+}
+
+ExportingFunctionsMap[DatatypeDefinitionString.name] = (v: DatatypeDefinitionString): unknown => {
+    return {
+        "@_MAX-LENGTH": v.maxLength
+    };
+}
+
+ExportingFunctionsMap[DatatypeDefinitionInteger.name] = (v: DatatypeDefinitionInteger): unknown => {
+    return {}
+}
+
+ExportingFunctionsMap[DatatypeDefinitionEnumeration.name] = (v: DatatypeDefinitionEnumeration): unknown => {
+    return {}
+}
+
+//-----------
+
+//Spec types
+
+ExportingFunctionsMap[SpecType.name] = (v: SpecType): unknown => {
+    return {
+        "SPEC-ATTRIBUTES": exportData(v.specAttributes)
+    }
+}
+
+ExportingFunctionsMap[SpecObjectType.name] = (v: SpecObjectType): unknown => {
+    return {};
+}
+
+ExportingFunctionsMap[SpecificationType.name] = (v: SpecificationType): unknown => {
+    return {};
+}
+
+ExportingFunctionsMap[SpecRelationType.name] = (v: SpecRelationType): unknown => {
+    return {};
+}
+
+//Spec objects
+
+ExportingFunctionsMap[SpecElementWithAttributes.name] = (v: SpecElementWithAttributes): unknown => {
+    return {
+        "VALUES": extractData(v.values)
+    }
+}
+
+ExportingFunctionsMap[SpecObject.name] = (v: any): unknown => {
+    return {
+        // type: getFirstElement<any>(extractData(v["TYPE"])),
+    }
+}
+
+ExportingFunctionsMap[SpecHierarchy.name] = (v: any): unknown => {
+    return {
+        // object: getFirstElement<any>(extractData(v["OBJECT"])),
+        // children: extractData(v["CHILDREN"])
+    //     isTableInternal?: boolean;
+    // object?: SpecObject;
+    // parent?: SpecHierarchy;
+    // children?: SpecHierarchy[]; //ordered
+    // root?: Specification;
+    }
+}
+
+//Specification
+ExportingFunctionsMap[Specification.name] = (v: any): unknown => {
+    return {
+        // type: getFirstElement<any>(extractData(v["TYPE"])),
+        // children: extractData(v["CHILDREN"])
+    }
+}
+
+//Attribute definition
+ExportingFunctionsMap[AttributeDefinition.name] = (v: any): unknown => {
+    return {
+        // type: getFirstElement<any>(extractData(v["TYPE"]))
+    }
+}
+
+ExportingFunctionsMap[AttributeDefinitionSimple.name] = (v: any): unknown => {
+    return;
+}
+
+ExportingFunctionsMap[AttributeDefinitionString.name] = (v: any): unknown => {
+    return {};
+}
+
+ExportingFunctionsMap[AttributeDefinitionInteger.name] = (v: any): unknown => {
+    return {};
+}
+
+//Attribute values
+
+ExportingFunctionsMap[AttributeValue.name] = (v: any): unknown => {
+    return {
+        // definition: getFirstElement<any>(extractData(v["DEFINITION"]))
+    };
+}
+
+ExportingFunctionsMap[AttributeValueSimple.name] = (v: any): unknown => {
+    return;
+}
+
+ExportingFunctionsMap[AttributeValueString.name] = (v: any): unknown => {
+    return {
+        "@_THE-VALUE": v.theValue
+    };
+}
+
+ExportingFunctionsMap[AttributeValueInteger.name] = (v: any): unknown => {
+    return {
+        "@_THE-VALUE": v.theValue
+    };
+}

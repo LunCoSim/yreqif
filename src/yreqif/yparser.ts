@@ -1,13 +1,13 @@
 import _ from "lodash";
 
-import { parse as fast_xml_parse} from "fast-xml-parser";
+import { parse as fast_xml_parse, j2xParser} from "fast-xml-parser";
 
 import { ToArray } from "../utils";
 
 import { ReqIF } from "../reqif-naive/ReqIF";
 
 import { yReqIF, yIndex } from "./yreqif";
-import { ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
+import { ExportingFunctionsMap, ExtractingFunctionsMap, RefTypes, XMLMap } from "./ymaps";
 import { Identifiable } from "../reqif-naive/basic/ReqIFBasicClasses";
 
 //Global definitions
@@ -117,6 +117,41 @@ export function extractData(source: any): any[] | void {
     }
 }
 
+//------------------------------------------
+export function exportObj(source: any): any {
+
+    let res = {};
+    let s = Object.getPrototypeOf(source);
+
+    while(s.constructor.name != "Object") {
+        if(s.constructor) {
+            if(ExportingFunctionsMap[s.constructor.name]) {
+                res = Object.assign(res, ExportingFunctionsMap[s.constructor.name](source));
+            } else {
+                console.error('Exporting function not found for: ',  s.constructor.name);
+            }
+        }
+        
+        s = Object.getPrototypeOf(s);
+    }
+    return res;
+}
+
+export function exportData(source: any): Object {
+    if(source) {
+        return exportObj(source);
+    }
+    console.log("Error exporting: ", source);
+    return {};
+}
+ 
+//------------------------------------------
+
+function prepareXMLRepresentation(reqif: ReqIF): Object {
+    return exportData(reqif);
+}
+
+//------------------------------------------
 export function importXML(data: unknown) {
     INDEX = {};
 
@@ -133,5 +168,27 @@ export function importXML(data: unknown) {
 //--------------------
 
 export function exportXML(yreqif: yReqIF): string {
-    return "";
+    
+    //default options need not to set
+    var defaultOptions = {
+        attributeNamePrefix : "@_",
+        textNodeName : "#text",
+        ignoreAttributes : false,
+        cdataTagName: "__cdata", //default is false
+        cdataPositionChar: "\\c",
+        format: false,
+        indentBy: "  ",
+        supressEmptyNode: false,
+    };
+
+    var parser = new j2xParser(defaultOptions);
+
+    var xmlRepresentation = prepareXMLRepresentation(yreqif.reqif);
+
+    var preparedXML = {
+
+    }
+
+    var xml = parser.parse(xmlRepresentation);
+    return xml;
 }

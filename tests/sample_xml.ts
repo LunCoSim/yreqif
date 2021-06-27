@@ -1,4 +1,5 @@
-export const sample_xml = `<?xml version="1.0" encoding="UTF-8"?>
+export const sample_xml = `
+<?xml version="1.0" encoding="UTF-8"?>
 <REQ-IF xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd" xmlns:configuration="http://eclipse.org/rmf/pror/toolextensions/1.0" xmlns:headline="http://pror.org/presentation/headline" xmlns:id="http://pror.org/presentation/id" xmlns:linewrap="http://pror.org/presentation/linewrap">
   <THE-HEADER>
     <REQ-IF-HEADER IDENTIFIER="rmf-1678aca6-a5ab-43bd-8443-80a6cc547abc">
@@ -2835,7 +2836,7 @@ export const sample_xml = `<?xml version="1.0" encoding="UTF-8"?>
 </REQ-IF>
 `;
 
-export const sample_xml1 = `<?xml version="1.0" encoding="UTF-8"?>
+export const sample_xml1 = `
 <?xml version="1.0" encoding="UTF-8"?>
 <REQ-IF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/ReqIF/20101201" xsi:schemaLocation="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd reqif.xsd http://www.w3.org/1999/xhtml driver.xsd">
   <THE-HEADER>
@@ -2947,7 +2948,7 @@ export const sample_xml1 = `<?xml version="1.0" encoding="UTF-8"?>
 </REQ-IF>
 `;
 
-export const sample_xml2 = `<?xml version="1.0" encoding="UTF-8"?>
+export const sample_xml2 = `
 <?xml version="1.0" encoding="UTF-8"?>
 <REQ-IF xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

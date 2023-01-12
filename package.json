@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.170",
     "@types/uuid": "^8.3.0",
-    "fast-xml-parser": "ssh://git@github.com:Yarm-requirements-management/fast-xml-parser.git",
+    "fast-xml-parser": "^3.19.0",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   },

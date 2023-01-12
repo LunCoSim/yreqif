@@ -1,3 +1,5 @@
+**Code of ReqIf library, made for Yarm on TypeScript. Quite outdated**
+
 # yReqIF management library
 
 ## Used tools
